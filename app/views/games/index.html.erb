@@ -1,0 +1,23 @@
+<table>
+  <caption>All Thundervein Zero games</caption>
+  <thead>
+    <tr>
+      <th scope="col">URL</th>
+      <th scope="col">Players</th>
+      <th scope="col">Turn</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @games.each do |game| %>
+    <tr>
+      <th scope="row"><%= link_to game.id, game %></th>
+      <td>
+        <ul>
+          <% game.players.each { |p| concat(content_tag :li, p.email) } %>
+        </ul>
+      </td>
+      <td><%= game.turn %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

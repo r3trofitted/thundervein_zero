@@ -1,0 +1,12 @@
+agushi:
+  game: ongoing_game
+  email: agushi@example.com
+karima:
+  game: ongoing_game
+  email: karima@example.com
+hunter:
+  game: ongoing_game
+  email: hunter@example.com
+odoma:
+  game: ongoing_game
+  email: odoma@example.com

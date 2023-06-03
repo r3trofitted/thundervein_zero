@@ -1,0 +1,12 @@
+ongoing_game_turn_1:
+  game: ongoing_game
+  board: ""
+  number: 1
+ongoing_game_turn_2:
+  game: ongoing_game
+  board: ""
+  number: 2
+ongoing_game_turn_3:
+  game: ongoing_game
+  board: ""
+  number: 3
