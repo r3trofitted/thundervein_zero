@@ -6,4 +6,5 @@
     (to give orders), there should be a easy way to chose the right recipient, and more 
     importantly, some kind of safeguard to avoid sending something sensible to the wrong 
     person (e.g. sending actual game orders to a player).
+*   AR encrypted attributes could/should be used for the players' actual email address.
 *   [ ] Implement a way to know when a player is eliminated from a game (e.g. strike their name on the monitoring page)
