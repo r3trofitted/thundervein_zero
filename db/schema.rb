@@ -18,10 +18,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_03_094812) do
 
   create_table "players", force: :cascade do |t|
     t.integer "game_id", null: false
-    t.string "email"
+    t.string "name", null: false
+    t.string "email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_players_on_email", unique: true
+    t.index ["game_id", "email"], name: "index_players_on_game_id_and_email", unique: true
+    t.index ["game_id", "name"], name: "index_players_on_game_id_and_name", unique: true
     t.index ["game_id"], name: "index_players_on_game_id"
   end
 
