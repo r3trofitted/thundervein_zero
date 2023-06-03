@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_03_094812) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_03_165434) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.string "type"
+    t.integer "turn_id", null: false
+    t.integer "player_id", null: false
+    t.string "origin", null: false
+    t.string "target", null: false
+    t.integer "units", null: false
+    t.integer "engagement"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player_id"], name: "index_orders_on_player_id"
+    t.index ["turn_id"], name: "index_orders_on_turn_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -37,6 +51,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_03_094812) do
     t.index ["game_id"], name: "index_turns_on_game_id"
   end
 
+  add_foreign_key "orders", "players"
+  add_foreign_key "orders", "turns"
   add_foreign_key "players", "games"
   add_foreign_key "turns", "games"
 end

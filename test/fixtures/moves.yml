@@ -1,0 +1,7 @@
+karima_move_in_ongoing_game_turn_2:
+  type: Move
+  turn: ongoing_game_turn_2
+  player: karima
+  origin: east
+  target: south
+  units: 2

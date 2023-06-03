@@ -1,3 +1,18 @@
+new_two_players_game_turn_1:
+  game: new_two_players_game
+  board:
+    :north:
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
+      :units: 2
+    :south:
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :units: 2
+    :east:
+      :occupant:
+      :units:
+    :west:
+      :occupant:
+      :units:
 ongoing_game_turn_1:
   game: ongoing_game
   board:
@@ -5,13 +20,13 @@ ongoing_game_turn_1:
       :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
       :units: 4
     :south:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
       :units: 4
     :east:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :hunter %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :hunter %>
       :units: 4
     :west:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :odoma %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
       :units: 4
   number: 1
 ongoing_game_turn_2:
@@ -22,13 +37,13 @@ ongoing_game_turn_2:
       :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
       :units: 4
     :south:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
       :units: 1
     :east:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
       :units: 7
     :west:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :odoma %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
       :units: 3
   number: 2
 ongoing_game_turn_3:
@@ -39,12 +54,12 @@ ongoing_game_turn_3:
       :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
       :units: 4
     :south:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
       :units: 3
     :east:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
       :units: 5
     :west:
-      :occupant: <%= ActiveRecord::FixtureSet.identify :odoma %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
       :units: 2
   number: 3
