@@ -1,0 +1,18 @@
+# Karima has attacked and eliminated Hunter
+karima_attack_on_hunter_in_ongoing_game_turn_2:
+  type: Attack
+  turn: ongoing_game_turn_2
+  player: karima
+  origin: south
+  target: east
+  units: 4
+  engagement: 4
+# Odoma has attacked Agushi but failed
+odoma_attack_on_agushi_in_ongoing_game_turn_2:
+  type: Attack
+  turn: ongoing_game_turn_2
+  player: odoma
+  origin: west
+  target: north
+  units: 2
+  engagement: 1
