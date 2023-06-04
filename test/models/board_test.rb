@@ -1,8 +1,6 @@
 require "test_helper"
 
 class BoardTest < ActiveSupport::TestCase
-  self.use_instantiated_fixtures = true
-  
   test "a board's zone has a occupant and a units count" do
     board = @ongoing_game_turn_3.board
     

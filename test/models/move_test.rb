@@ -1,8 +1,6 @@
 require "test_helper"
 
 class MoveTest < ActiveSupport::TestCase
-  self.use_instantiated_fixtures = true
-
   test "a player cannot declare a move from a zone they don't occupy" do
     move = Move.new(turn: @new_two_players_game_turn_1, player: @agushi, origin: :south, target: :east, units: 1) # the South zone is occupied by Karima, not Agushi
     refute move.valid?

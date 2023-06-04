@@ -1,8 +1,6 @@
 require "test_helper"
 
 class AttackTest < ActiveSupport::TestCase
-  self.use_instantiated_fixtures = true
-
   test "a player cannot attack from a zone they don't occupy" do
     attack = Attack.new(turn: @ongoing_game_turn_1, player: @karima, origin: :north, target: :east, units: 4, engagement: 4)
     refute attack.valid?
