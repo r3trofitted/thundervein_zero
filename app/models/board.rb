@@ -62,9 +62,10 @@ class Board
   
   def move(units, from:, to:)
     origin, target = self[from], self[to]
+    kept_units_on_target = target.occupied_by?(origin.occupant) ? target.units : 0
     
     public_send "#{from}=", origin.with(units: origin.units - units)
-    public_send "#{to}=", target.with(units: target.units + units, occupant: origin.occupant)
+    public_send "#{to}=", target.with(units: kept_units_on_target + units, occupant: origin.occupant)
   end
   
   ##
@@ -73,5 +74,9 @@ class Board
   # (Note: I'm using Data here simply to try this new feature out; at the moment, 
   # I'm not convinced that the immutability it offers over Struct is worth 
   # anything here, but we'll see…)
-  Zone = Data.define :occupant, :units
+  Zone = Data.define(:occupant, :units) do
+    def occupied_by?(player)
+      occupant == player
+    end
+  end
 end
