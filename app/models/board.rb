@@ -60,15 +60,18 @@ class Board
     self[zone_name].units
   end
   
-  def apply_move(move)
-    origin = Zone.new occupant: move.player, units: units_in(move.origin) - move.units
-    target = Zone.new occupant: move.player, units: units_in(move.target) + move.units
+  def move(units, from:, to:)
+    origin, target = self[from], self[to]
     
-    public_send "#{move.origin}=", origin
-    public_send "#{move.target}=", target
+    public_send "#{from}=", origin.with(units: origin.units - units)
+    public_send "#{to}=", target.with(units: target.units + units, occupant: origin.occupant)
   end
   
   ##
   # Represents a zone on the board. A zone can be occupied (by a Player) and have units.
+  #
+  # (Note: I'm using Data here simply to try this new feature out; at the moment, 
+  # I'm not convinced that the immutability it offers over Struct is worth 
+  # anything here, but we'll see…)
   Zone = Data.define :occupant, :units
 end

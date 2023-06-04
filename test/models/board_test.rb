@@ -9,12 +9,10 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal 4, zone.units
   end
   
-  test "applying a move order" do
+  test "moving units" do
     board = Board.new(north: Board::Zone.new(occupant: @odoma, units: 4))
-    move  = Move.new(player: @odoma, origin: :north, target: :east, units: 3, turn: Turn.new(board: board))
-    assert move.valid?
     
-    board.apply_move(move)
+    board.move(3, from: :north, to: :east)
     
     assert_equal @odoma, board.north.occupant
     assert_equal 1, board.north.units
