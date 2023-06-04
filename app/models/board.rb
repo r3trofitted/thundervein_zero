@@ -41,6 +41,14 @@ class Board
     @west  ||= Zone.new(occupant: nil, units: 0)
   end
   
+  def apply_move(move)
+    origin = Zone.new occupant: move.player, units: move.origin.units - move.units
+    target = Zone.new occupant: move.player, units: move.target.units + move.units
+    
+    public_send "#{move.origin_before_type_cast}=", origin
+    public_send "#{move.target_before_type_cast}=", target
+  end
+  
   ##
   # Represents a zone on the board. A zone can be occupied (by a Player) and have units.
   Zone = Data.define :occupant, :units
