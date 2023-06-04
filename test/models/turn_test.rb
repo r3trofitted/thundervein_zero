@@ -1,6 +1,17 @@
 require "test_helper"
 
 class TurnTest < ActiveSupport::TestCase
+  # TODO
+  test "#orders.colliding" do
+    skip "Test still to be written"
+  end
+  
+  # TODO
+  test "#orders.to_carry_out" do
+    skip "Test still to be written"
+  end
+  
+  
   test "resolving a turn creates a new turn with a duplicated board and yields it" do
     turn = @ongoing_game_turn_3
     

@@ -2,6 +2,9 @@ class Order < ApplicationRecord
   belongs_to :turn
   belongs_to :player
   
+  scope :colliding, -> { where(target: Order.select(:target).group(:turn_id, :target).having("COUNT(target) > 1")) }
+  scope :not_colliding, -> { where(target: Order.select(:target).group(:turn_id, :target).having("COUNT(target) = 1")) }
+  
   enum :status, %i(received carried_out canceled), default: :received
   
   delegate :board, to: :turn
