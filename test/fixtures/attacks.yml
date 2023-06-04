@@ -7,6 +7,7 @@ karima_attack_on_hunter_in_ongoing_game_turn_2:
   target: east
   units: 4
   engagement: 4
+  status: <%= Order.statuses[:carried_out] %>
 # Odoma has attacked Agushi but failed
 odoma_attack_on_agushi_in_ongoing_game_turn_2:
   type: Attack
@@ -16,3 +17,4 @@ odoma_attack_on_agushi_in_ongoing_game_turn_2:
   target: north
   units: 2
   engagement: 1
+  status: <%= Order.statuses[:carried_out] %>

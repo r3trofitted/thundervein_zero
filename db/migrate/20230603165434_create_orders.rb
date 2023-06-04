@@ -8,8 +8,10 @@ class CreateOrders < ActiveRecord::Migration[7.0]
       t.string :target, null: false
       t.integer :units, null: false
       t.integer :engagement
+      t.integer :status, null: false
 
       t.timestamps
     end
+    add_index :orders, :status
   end
 end

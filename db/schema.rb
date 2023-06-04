@@ -24,9 +24,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_03_165434) do
     t.string "target", null: false
     t.integer "units", null: false
     t.integer "engagement"
+    t.integer "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["player_id"], name: "index_orders_on_player_id"
+    t.index ["status"], name: "index_orders_on_status"
     t.index ["turn_id"], name: "index_orders_on_turn_id"
   end
 

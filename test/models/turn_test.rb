@@ -26,7 +26,8 @@ class TurnTest < ActiveSupport::TestCase
     assert_equal @karima, east.occupant
     assert_equal 5, east.units
     
-    turn.orders << Move.new(player: @karima, origin: :south, target: :east, units: 2)
+    move = Move.create(turn: turn, player: @karima, origin: :south, target: :east, units: 2)
+    
     turn.resolve! do |new_turn|
       south, east = new_turn.board.south, new_turn.board.east
       assert_equal @karima, south.occupant
@@ -34,5 +35,7 @@ class TurnTest < ActiveSupport::TestCase
       assert_equal @karima, east.occupant
       assert_equal 7, east.units
     end
+    move.reload
+    assert move.carried_out?
   end
 end

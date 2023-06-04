@@ -2,6 +2,8 @@ class Order < ApplicationRecord
   belongs_to :turn
   belongs_to :player
   
+  enum :status, %i(received carried_out canceled), default: :received
+  
   delegate :board, to: :turn
   
   class OccupiedByPlayerValidator < ActiveModel::EachValidator

@@ -5,3 +5,5 @@ karima_move_in_ongoing_game_turn_2:
   origin: east
   target: south
   units: 2
+  status: <%= Order.statuses[:carried_out] %>
+

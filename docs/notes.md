@@ -7,4 +7,6 @@
     importantly, some kind of safeguard to avoid sending something sensible to the wrong 
     person (e.g. sending actual game orders to a player).
 *   AR encrypted attributes could/should be used for the players' actual email address.
+*   Attacks will need a special "pending" status while the game waits for the defender to pick
+    a guess. Which means, in turn (ah ah) that a turn resolution will not be atomic.
 *   [ ] Implement a way to know when a player is eliminated from a game (e.g. strike their name on the monitoring page)
