@@ -6,13 +6,13 @@ class Order < ApplicationRecord
   
   class OccupiedByPlayerValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      record.errors.add(attribute, :not_occupied_by_player) unless value.occupant == record.player
+      record.errors.add(attribute, :not_occupied_by_player) unless record.board.occupant_of(value) == record.player
     end
   end
   
   class EmptyOrOccupiedByPlayerValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      if occupant = value.occupant
+      if occupant = record.board.occupant_of(value)
         record.errors.add(attribute, :occupied) unless occupant == record.player
       end
     end
@@ -20,7 +20,7 @@ class Order < ApplicationRecord
   
   class OccupiedByAnotherPlayerValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
-      if occupant = value.occupant
+      if occupant = record.board.occupant_of(value)
         record.errors.add(attribute, :occupied_by_player) if occupant == record.player
       else
         record.errors.add(attribute, :empty)
@@ -29,12 +29,4 @@ class Order < ApplicationRecord
   end
   
   validates :origin, presence: true, occupied_by_player: true
-
-  def origin
-    board.public_send super
-  end
-  
-  def target
-    board.public_send super
-  end
 end

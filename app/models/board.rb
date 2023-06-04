@@ -41,12 +41,31 @@ class Board
     @west  ||= Zone.new(occupant: nil, units: 0)
   end
   
-  def apply_move(move)
-    origin = Zone.new occupant: move.player, units: move.origin.units - move.units
-    target = Zone.new occupant: move.player, units: move.target.units + move.units
+  def [](zone_name)
+    raise ArgumentError unless respond_to? zone_name
     
-    public_send "#{move.origin_before_type_cast}=", origin
-    public_send "#{move.target_before_type_cast}=", target
+    zone = public_send(zone_name)
+    if zone.is_a? Zone
+      zone
+    else
+      raise ArgumentError
+    end
+  end
+  
+  def occupant_of(zone_name)
+    self[zone_name].occupant
+  end
+  
+  def units_in(zone_name)
+    self[zone_name].units
+  end
+  
+  def apply_move(move)
+    origin = Zone.new occupant: move.player, units: units_in(move.origin) - move.units
+    target = Zone.new occupant: move.player, units: units_in(move.target) + move.units
+    
+    public_send "#{move.origin}=", origin
+    public_send "#{move.target}=", target
   end
   
   ##
