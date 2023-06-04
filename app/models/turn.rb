@@ -7,6 +7,7 @@ class Turn < ApplicationRecord
   def resolve!
     new_turn = dup.tap { |t| t.increment :number }
     new_turn.save!
-    new_turn
+    yield new_turn if block_given?
+    true
   end
 end
