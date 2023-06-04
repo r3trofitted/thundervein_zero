@@ -35,4 +35,18 @@ class TurnTest < ActiveSupport::TestCase
       assert_equal 7, east.units
     end
   end
+  
+  test "resolving a stand-alone move" do
+    board = Board.new(north: Board::Zone.new(occupant: @odoma, units: 4))
+    turn  = Turn.new(board: board)
+    move  = Move.new(turn: turn, player: @odoma, origin: :north, target: :east, units: 3)
+    assert move.valid?
+    
+    Turn.resolve_move(board, move)
+    
+    assert_equal @odoma, board.north.occupant
+    assert_equal 1, board.north.units
+    assert_equal @odoma, board.east.occupant
+    assert_equal 3, board.east.units
+  end
 end
