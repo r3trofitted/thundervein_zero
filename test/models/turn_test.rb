@@ -35,7 +35,23 @@ class TurnTest < ActiveSupport::TestCase
       assert_equal @karima, east.occupant
       assert_equal 7, east.units
     end
-    move.reload
-    assert move.carried_out?
+
+    assert move.reload.carried_out?
+  end
+  
+  test "upon resolution, colliding moves cancel each other" do
+    turn = @new_two_players_game_turn_1
+    
+    agushi_move = Move.create(turn: turn, player: @agushi, origin: :north, target: :west, units: 1)
+    karima_move = Move.create(turn: turn, player: @karima, origin: :south, target: :west, units: 1)
+    
+    turn.resolve! do |new_turn|
+      assert_nil new_turn.board.occupant_of(:west) # no change of occupant because the moves were canceled
+      assert_equal 2, new_turn.board.units_in(:north) # no unit moved
+      assert_equal 2, new_turn.board.units_in(:south) # no unit moved
+    end
+    
+    assert agushi_move.reload.canceled?
+    assert karima_move.reload.canceled?
   end
 end

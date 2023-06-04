@@ -7,10 +7,17 @@ class Turn < ApplicationRecord
   def resolve!
     new_turn = dup.tap { |t| t.increment :number }
     
-    pending_moves.each do |move|
+    colliding_moves, valid_moves = pending_moves.group_by(&:target)
+                                                .values
+                                                .partition(&:many?)
+                                                .map(&:flatten)
+    
+    valid_moves.each do |move|
       new_turn.board.move(move.units, from: move.origin, to: move.target)
       move.carried_out!
     end
+    colliding_moves.each &:canceled!
+    
     new_turn.save!
     
     yield new_turn if block_given?
