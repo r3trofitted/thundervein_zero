@@ -47,4 +47,27 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal @noemie, board.south.occupant # the occupant has been replaced
     assert_equal 3, board.south.units          # the previous units have been removed
   end
+  
+  test "removing units from a zone" do
+    board = Board.new(north: Board::Zone.new(occupant: @noemie, units: 4))
+    board.remove 1, from: :north
+    assert_equal 3, board.north.units
+    
+    # it should be possible to remove more units than present (just in case)
+    board = Board.new(north: Board::Zone.new(occupant: @noemie, units: 4))
+    board.remove 10, from: :north
+    assert_equal 0, board.north.units
+  end
+  
+  test "removing all units from a zone removes its occupant" do
+    board = Board.new(north: Board::Zone.new(occupant: @noemie, units: 4))
+    board.remove 4, from: :north
+    assert_equal 0, board.north.units
+    assert_nil board.north.occupant
+    
+    board = Board.new(north: Board::Zone.new(occupant: @noemie, units: 4))
+    board.remove :all, from: :north
+    assert_equal 0, board.north.units
+    assert_nil board.north.occupant
+  end
 end

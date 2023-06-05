@@ -80,6 +80,12 @@ class Board
     public_send "#{to}=", target.with(units: kept_units_on_target + units, occupant: origin.occupant)
   end
   
+  def remove(units, from:)
+    zone = self[from]
+    new_units = (units == :all) ? 0 : [0, (zone.units - units)].max
+    public_send "#{from}=", zone.with(units: new_units, occupant: (zone.occupant unless new_units.zero?))
+  end
+  
   ##
   # Represents a zone on the board. A zone can be occupied (by a Player) and have units.
   #
