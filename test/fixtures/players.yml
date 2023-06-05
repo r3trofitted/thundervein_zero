@@ -1,16 +1,12 @@
-agushi:
+noemie:
   game: ongoing_game
-  name: Marylene Agushi
-  email: agushi@example.com
-karima:
+  name: Noenie North
+  email: noemie@example.com
+steve:
   game: ongoing_game
-  name: Kiki Karima
-  email: karima@example.com
-hunter:
+  name: Steve South
+  email: steve@example.com
+wyn:
   game: ongoing_game
-  name: Della Hunter
-  email: hunter@example.com
-odoma:
-  game: ongoing_game
-  name: Jimmy Odoma
-  email: odoma@example.com
+  name: Wyn West
+  email: wyn@example.com

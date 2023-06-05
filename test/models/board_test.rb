@@ -5,46 +5,46 @@ class BoardTest < ActiveSupport::TestCase
     board = @ongoing_game_turn_3.board
     
     zone = board.north
-    assert_equal @agushi, zone.occupant
-    assert_equal 4, zone.units
+    assert_equal @noemie, zone.occupant
+    assert_equal 2, zone.units
   end
   
   test "moving units to an empty zone" do
-    board = Board.new(north: Board::Zone.new(occupant: @odoma, units: 4))
+    board = Board.new(north: Board::Zone.new(occupant: @noemie, units: 4))
     
     board.move(3, from: :north, to: :east)
     
-    assert_equal @odoma, board.north.occupant
+    assert_equal @noemie, board.north.occupant
     assert_equal 1, board.north.units
-    assert_equal @odoma, board.east.occupant
+    assert_equal @noemie, board.east.occupant
     assert_equal 3, board.east.units
   end
   
   test "moving units to a zone occupied by the same player" do
     board = Board.new(
-      north: Board::Zone.new(occupant: @odoma, units: 4),
-      east: Board::Zone.new(occupant: @odoma, units: 2)
+      north: Board::Zone.new(occupant: @noemie, units: 4),
+      east: Board::Zone.new(occupant: @noemie, units: 2)
     )
     
     board.move(3, from: :north, to: :east)
     
-    assert_equal @odoma, board.north.occupant
+    assert_equal @noemie, board.north.occupant
     assert_equal 1, board.north.units
-    assert_equal @odoma, board.east.occupant
-    assert_equal 5, board.east.units         # the previous units have been added
+    assert_equal @noemie, board.east.occupant
+    assert_equal 5, board.east.units           # the previous units have been added
   end
   
   test "moving units to a zone occupied by another player" do
     board = Board.new(
-      north: Board::Zone.new(occupant: @odoma, units: 4),
-      east: Board::Zone.new(occupant: @hunter, units: 2)
+      north: Board::Zone.new(occupant: @noemie, units: 4),
+      south: Board::Zone.new(occupant: @steve, units: 2)
     )
     
-    board.move(3, from: :north, to: :east)
+    board.move(3, from: :north, to: :south)
     
-    assert_equal @odoma, board.north.occupant
+    assert_equal @noemie, board.north.occupant
     assert_equal 1, board.north.units
-    assert_equal @odoma, board.east.occupant # the occupant has been replaced
-    assert_equal 3, board.east.units         # the previous units have been removed
+    assert_equal @noemie, board.south.occupant # the occupant has been replaced
+    assert_equal 3, board.south.units          # the previous units have been removed
   end
 end

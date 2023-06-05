@@ -1,9 +1,9 @@
-karima_move_in_ongoing_game_turn_2:
+noemie_move_in_ongoing_game_turn_2:
   type: Move
   turn: ongoing_game_turn_2
-  player: karima
-  origin: east
-  target: south
-  units: 2
+  player: noemie
+  origin: west
+  target: northh
+  units: 1
   status: <%= Order.statuses[:carried_out] %>
 

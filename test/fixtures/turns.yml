@@ -1,80 +1,65 @@
-new_two_players_game_turn_1:
-  game: new_two_players_game
+new_game_turn_1:
+  game: new_game
   board:
     :north:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
-      :units: 2
-    :south:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
-      :units: 2
-    :east:
-      :occupant_id:
-      :units:
-    :west:
-      :occupant_id:
-      :units:
-new_three_players_game_turn_1:
-  game: new_three_players_game
-  board:
-    :north:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
       :units: 3
     :south:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :steve %>
+      :units: 3
+    :west:
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :wyn %>
       :units: 3
     :east:
       :occupant_id:
       :units:
-    :west:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
-      :units: 3
 ongoing_game_turn_1:
   game: ongoing_game
   board:
     :north:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
       :units: 4
     :south:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
-      :units: 4
-    :east:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :hunter %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :steve %>
       :units: 4
     :west:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :wyn %>
       :units: 4
+    :east:
+      :occupant_id:
+      :units:
   number: 1
 ongoing_game_turn_2:
   game: ongoing_game
   board:
-    # Karima has attacked and eliminated Hunter, Odoma has attacked Agushi but failed
+    # Noémie has attacked and eliminated Wyn, Steve has attacked Noémie but failed
     :north:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
-      :units: 4
-    :south:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
       :units: 1
-    :east:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
-      :units: 7
+    :south:
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :steve %>
+      :units: 4
     :west:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :neomie %>
       :units: 3
+    :east:
+      :occupant_id:
+      :units:
   number: 2
 ongoing_game_turn_3:
   game: ongoing_game
   board:
-    # Karima has moved 2 units back from East to South, Odoma has once attacked Agushi and failed
+    # Noémie has moved 1 unit back from West to North, Steve has once again attacked Noémie and failed
     :north:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :agushi %>
-      :units: 4
-    :south:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
-      :units: 3
-    :east:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :karima %>
-      :units: 5
-    :west:
-      :occupant_id: <%= ActiveRecord::FixtureSet.identify :odoma %>
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
       :units: 2
+    :south:
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :steve %>
+      :units: 4
+    :west:
+      :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
+      :units: 2
+    :east:
+      :occupant_id:
+      :units:
   number: 3

@@ -2,10 +2,10 @@ require "test_helper"
 
 class TurnTest < ActiveSupport::TestCase
   test "#orders.colliding and #orders.to_carry_out" do
-    t = @new_three_players_game_turn_1
-    colliding_order_1 = Attack.create turn: t, player: @agushi, origin: :north, target: :west, units: 1, engagement: 1
-    colliding_order_2 = Attack.create turn: t, player: @karima, origin: :south, target: :west, units: 1, engagement: 1
-    valid_order       = Move.create! turn: t, player: @odoma, origin: :west, target: :east, units: 1
+    t = @new_game_turn_1
+    colliding_order_1 = Attack.create! turn: t, player: @noemie, origin: :north, target: :west, units: 1, engagement: 1
+    colliding_order_2 = Attack.create! turn: t, player: @steve, origin: :south, target: :west, units: 1, engagement: 1
+    valid_order       = Move.create! turn: t, player: @wyn, origin: :west, target: :east, units: 1
     
     colliding_orders = t.orders.colliding
     assert_includes colliding_orders, colliding_order_1
@@ -36,56 +36,56 @@ class TurnTest < ActiveSupport::TestCase
   test "resolving a turn with move orders" do
     turn = @ongoing_game_turn_3
     
-    # At the beginning of turn 3, Karima has 3 in South and 5 units in East
-    south, east = turn.board.south, turn.board.east
-    assert_equal @karima, south.occupant
-    assert_equal 3, south.units
-    assert_equal @karima, east.occupant
-    assert_equal 5, east.units
+    # At the beginning of turn 3, Noemie has 2 in North and 2 units in West
+    north, west = turn.board.north, turn.board.west
+    assert_equal @noemie, north.occupant
+    assert_equal 2, north.units
+    assert_equal @noemie, west.occupant
+    assert_equal 2, west.units
     
-    move = Move.create(turn: turn, player: @karima, origin: :south, target: :east, units: 2)
+    move = Move.create(turn: turn, player: @noemie, origin: :west, target: :north, units: 1)
     
     turn.resolve! do |new_turn|
-      south, east = new_turn.board.south, new_turn.board.east
-      assert_equal @karima, south.occupant
-      assert_equal 1, south.units
-      assert_equal @karima, east.occupant
-      assert_equal 7, east.units
+      north, west = new_turn.board.north, new_turn.board.west
+      assert_equal @noemie, north.occupant
+      assert_equal 3, north.units
+      assert_equal @noemie, west.occupant
+      assert_equal 1, west.units
     end
 
     assert move.reload.carried_out?
   end
   
   test "upon resolution, colliding moves cancel each other" do
-    turn = @new_two_players_game_turn_1
+    turn = @new_game_turn_1
     
-    agushi_move = Move.create(turn: turn, player: @agushi, origin: :north, target: :west, units: 1)
-    karima_move = Move.create(turn: turn, player: @karima, origin: :south, target: :west, units: 1)
+    wyn_move  = Move.create(turn: turn, player: @wyn, origin: :west, target: :east, units: 1)
+    steve_move = Move.create(turn: turn, player: @steve, origin: :south, target: :east, units: 1)
     
     turn.resolve! do |new_turn|
-      assert_nil new_turn.board.occupant_of(:west) # no change of occupant because the moves were canceled
-      assert_equal 2, new_turn.board.units_in(:north) # no unit moved
-      assert_equal 2, new_turn.board.units_in(:south) # no unit moved
+      assert_nil new_turn.board.occupant_of(:east) # no change of occupant because the moves were canceled
+      assert_equal 3, new_turn.board.units_in(:west) # no unit moved
+      assert_equal 3, new_turn.board.units_in(:south) # no unit moved
     end
     
-    assert agushi_move.reload.canceled?
-    assert karima_move.reload.canceled?
+    assert wyn_move.reload.canceled?
+    assert steve_move.reload.canceled?
   end
   
   test "upon resolution, colliding attacks cancel each other" do
-    turn = @new_three_players_game_turn_1
+    turn = @new_game_turn_1
         
-    agushi_attack = Attack.create!(turn: turn, player: @agushi, origin: :north, target: :west, units: 2, engagement: 1)
-    karima_attack = Attack.create!(turn: turn, player: @karima, origin: :south, target: :west, units: 2, engagement: 2)
+    noemie_attack = Attack.create!(turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1)
+    steve_attack = Attack.create!(turn: turn, player: @steve, origin: :south, target: :west, units: 2, engagement: 2)
     
     turn.resolve! do |new_turn|
-      assert_equal @odoma, new_turn.board.occupant_of(:west) # no change of occupant because the attacks were canceled
+      assert_equal @wyn, new_turn.board.occupant_of(:west) # no change of occupant because the attacks were canceled
       assert_equal 3, new_turn.board.units_in(:north) # no unit moved
       assert_equal 3, new_turn.board.units_in(:south) # no unit moved
     end
     
-    assert agushi_attack.reload.canceled?
-    assert karima_attack.reload.canceled?
+    assert noemie_attack.reload.canceled?
+    assert steve_attack.reload.canceled?
   end
   
   # TODO

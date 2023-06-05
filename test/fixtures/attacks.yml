@@ -1,20 +1,30 @@
-# Karima has attacked and eliminated Hunter
-karima_attack_on_hunter_in_ongoing_game_turn_2:
+# Noémie has attacked and eliminated Wyn
+noemie_attack_on_wyn_in_ongoing_game_turn_1:
   type: Attack
-  turn: ongoing_game_turn_2
-  player: karima
-  origin: south
-  target: east
+  turn: ongoing_game_turn_1
+  player: noemie
+  origin: north
+  target: west
   units: 4
   engagement: 4
   status: <%= Order.statuses[:carried_out] %>
-# Odoma has attacked Agushi but failed
-odoma_attack_on_agushi_in_ongoing_game_turn_2:
+# Steve has attacked Noémie but failed
+wyn_attack_on_noemie_in_ongoing_game_turn_1:
   type: Attack
-  turn: ongoing_game_turn_2
-  player: odoma
-  origin: west
+  turn: ongoing_game_turn_1
+  player: steve
+  origin: south
   target: north
   units: 2
   engagement: 1
+  status: <%= Order.statuses[:carried_out] %>
+# Steve has attacked Noémie but failed, once again
+wyn_attack_on_noemie_in_ongoing_game_turn_2:
+  type: Attack
+  turn: ongoing_game_turn_2
+  player: steve
+  origin: south
+  target: north
+  units: 3
+  engagement: 2
   status: <%= Order.statuses[:carried_out] %>
