@@ -65,4 +65,24 @@ class TurnTest < ActiveSupport::TestCase
     assert agushi_move.reload.canceled?
     assert karima_move.reload.canceled?
   end
+  
+  test "upon resolution, colliding attacks cancel each other" do
+    turn = @new_three_players_game_turn_1
+        
+    agushi_attack = Attack.create!(turn: turn, player: @agushi, origin: :north, target: :west, units: 2, engagement: 1)
+    karima_attack = Attack.create!(turn: turn, player: @karima, origin: :south, target: :west, units: 2, engagement: 2)
+    
+    turn.resolve! do |new_turn|
+      assert_equal @odoma, new_turn.board.occupant_of(:west) # no change of occupant because the attacks were canceled
+      assert_equal 3, new_turn.board.units_in(:north) # no unit moved
+      assert_equal 3, new_turn.board.units_in(:south) # no unit moved
+    end
+    
+    assert agushi_attack.reload.canceled?
+    assert karima_attack.reload.canceled?
+  end
+  
+  test "resolving switcheroo attacks" do
+    skip "TODO – see design notes in docs/notes.md"
+  end
 end

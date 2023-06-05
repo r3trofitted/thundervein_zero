@@ -17,7 +17,7 @@ class Turn < ApplicationRecord
     
     # less efficient that +.update_all+, but perf is not an issue yet, so 
     # let's keep the callbacks and have the timestamps be taken care of along the status
-    moves.colliding.each &:canceled!
+    orders.colliding.each &:canceled!
     
     moves.to_carry_out.each do |move|
       new_turn.board.move(move.units, from: move.origin, to: move.target)
