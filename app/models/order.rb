@@ -53,6 +53,17 @@ class Order < ApplicationRecord
   end
   
   concerning :Validations do
+    class AdjacentValidator < ActiveModel::EachValidator
+      def initialize(options)
+        super
+        @other = options[:to]
+      end
+      
+      def validate_each(record, attribute, value)
+        record.errors.add(attribute, :must_be_adjacent) unless record.board.adjacent?(value, record.public_send(@other))
+      end
+    end
+    
     class OccupiedByPlayerValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
         record.errors.add(attribute, :not_occupied_by_player) unless record.board.occupant_of(value) == record.player
@@ -78,7 +89,8 @@ class Order < ApplicationRecord
     end
     
     included do
-      validates :origin, presence: true, occupied_by_player: true      
+      validates :origin, presence: true, occupied_by_player: true
+      validates :target, adjacent: { to: :origin }
     end
   end
 end

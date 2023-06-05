@@ -24,9 +24,7 @@ class MoveTest < ActiveSupport::TestCase
   end
     
   test "a player can not move to a zone that is not adjacent to the target zone" do
-    skip "Zones adjacency is not implemented yet"
-    
-    move = Move.new(turn: @new_game_turn_1, player: @noemie, origin: :north, target: :west, units: 1)
+    move = Move.new(turn: @new_game_turn_1, player: @noemie, origin: :north, target: :east, units: 1)
     refute move.valid?
     assert move.errors.of_kind? :target, :must_be_adjacent
   end

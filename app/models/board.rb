@@ -5,7 +5,8 @@
 # 4 zones, and its serialization/deserialization will probably be handed off to a 
 # specific class (maybe using +ActiveRecord::Attributes+).
 #
-# Eventually, the Board class should also cover the _adjacency_ of zones.
+# By the same token, the adjacency of zones is hardcoded (and simplistic), which
+#  could also prove inadequate once the board gets more complicated.
 #
 # In the meantime, this is enough to start working on more exploratory stuff, 
 # such as giving orders by e-mail and resolving conflits.
@@ -13,6 +14,13 @@ class Board
   include ActiveModel::AttributeAssignment
   
   attr_accessor :north, :east, :south, :west
+  
+  ADJACENCIES = {
+    north: %i[west south],
+    west: %i[north south],
+    south: %i[north west east],
+    east: %i[west south]
+  }
   
   def self.dump(value)
     YAML.dump({
@@ -58,6 +66,10 @@ class Board
   
   def units_in(zone_name)
     self[zone_name].units
+  end
+  
+  def adjacent?(a, b)
+    b.to_sym.in? ADJACENCIES.fetch(a.to_sym)
   end
   
   def move(units, from:, to:)

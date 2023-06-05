@@ -20,8 +20,6 @@ class AttackTest < ActiveSupport::TestCase
   end
     
   test "a player cannot attack a zone that is not adjacent to the origin zone" do
-    skip "Zones adjacency is not implemented yet"
-    
     attack = Attack.new(turn: @ongoing_game_turn_1, player: @noemie, origin: :north, target: :east, units: 2, engagement: 1)
     refute attack.valid?
     assert attack.errors.of_kind? :target, :must_be_adjacent
