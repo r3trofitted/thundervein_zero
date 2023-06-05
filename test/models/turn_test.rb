@@ -1,16 +1,22 @@
 require "test_helper"
 
 class TurnTest < ActiveSupport::TestCase
-  # TODO
-  test "#orders.colliding" do
-    skip "Test still to be written"
+  test "#orders.colliding and #orders.to_carry_out" do
+    t = @new_three_players_game_turn_1
+    colliding_order_1 = Attack.create turn: t, player: @agushi, origin: :north, target: :west, units: 1, engagement: 1
+    colliding_order_2 = Attack.create turn: t, player: @karima, origin: :south, target: :west, units: 1, engagement: 1
+    valid_order       = Move.create! turn: t, player: @odoma, origin: :west, target: :east, units: 1
+    
+    colliding_orders = t.orders.colliding
+    assert_includes colliding_orders, colliding_order_1
+    assert_includes colliding_orders, colliding_order_2 
+    refute_includes colliding_orders, valid_order
+    
+    orders_to_carry_out = t.orders.to_carry_out
+    refute_includes orders_to_carry_out, colliding_order_1
+    refute_includes orders_to_carry_out, colliding_order_2 
+    assert_includes orders_to_carry_out, valid_order
   end
-  
-  # TODO
-  test "#orders.to_carry_out" do
-    skip "Test still to be written"
-  end
-  
   
   test "resolving a turn creates a new turn with a duplicated board and yields it" do
     turn = @ongoing_game_turn_3
@@ -82,7 +88,13 @@ class TurnTest < ActiveSupport::TestCase
     assert karima_attack.reload.canceled?
   end
   
+  # TODO
   test "resolving switcheroo attacks" do
+    skip "TODO – see design notes in docs/notes.md"
+  end
+  
+  # TODO
+  test "resolving chained attacks" do
     skip "TODO – see design notes in docs/notes.md"
   end
 end
