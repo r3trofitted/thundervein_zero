@@ -30,8 +30,8 @@ A player can also _attack_ an occupied zone from an adjacent one that they contr
 To carry an attack, the player selects any number of units from the origin zone 
 (up to 6). Should the conflict resolve in a successful attack, the selected units 
 will move to occupy the targeted zone. (However, 1 unit must always stay on the 
-origin zone; if the attack was carried with this single unit, then the targeted 
-zone cannot be occupied and will stay empty.)
+origin zone; if the attack was carried with **all** the units from a zone, then 
+the targeted zone cannot be occupied and will stay empty.)
 
 ## Conflict resolution
 
