@@ -53,4 +53,14 @@ class AttackTest < ActiveSupport::TestCase
     assert Attack.new(guess: nil).pending?
     refute Attack.new(guess: 3).pending?
   end
+  
+  test "an attack is successful if the guess is not equal to the engagement, failed otherwise (unless it's pending)" do
+    assert Attack.new(engagement: 2, guess: 1).successful?
+    refute Attack.new(engagement: 2, guess: 2).successful?
+    refute Attack.new(engagement: 2, guess: nil).successful?
+    
+    assert Attack.new(engagement: 2, guess: 2).failed?
+    refute Attack.new(engagement: 2, guess: 1).failed?
+    refute Attack.new(engagement: 2, guess: nil).failed?
+  end
 end
