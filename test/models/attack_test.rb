@@ -48,4 +48,9 @@ class AttackTest < ActiveSupport::TestCase
     refute attack.valid?
     assert attack.errors.of_kind? :engagement, :greater_than_or_equal_to
   end
+  
+  test "an attack is pending if the defender hasn't given a guess yet" do
+    assert Attack.new(guess: nil).pending?
+    refute Attack.new(guess: 3).pending?
+  end
 end

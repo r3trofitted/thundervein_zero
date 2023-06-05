@@ -88,7 +88,7 @@ class TurnTest < ActiveSupport::TestCase
     assert steve_attack.reload.canceled?
   end
   
-  test "resolving a turn with an unresolved attack" do
+  test "resolving a turn with a pending attack" do
     turn = @new_game_turn_1
     
     attack = Attack.create! turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1

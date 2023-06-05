@@ -24,6 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_03_165434) do
     t.string "target", null: false
     t.integer "units", null: false
     t.integer "engagement"
+    t.integer "guess"
     t.integer "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
