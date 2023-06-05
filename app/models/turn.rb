@@ -11,6 +11,7 @@ class Turn < ApplicationRecord
   end
   
   serialize :board, Board
+  enum :status, %i(started resolution_in_progress finished), default: :started
   
   def resolve!
     new_turn = dup.tap { |t| t.increment :number }
@@ -27,7 +28,8 @@ class Turn < ApplicationRecord
     new_turn.save!
     
     yield new_turn if block_given?
-    true
+    
+    finished!
   end
   
   def moves

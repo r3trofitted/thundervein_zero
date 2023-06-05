@@ -1,5 +1,7 @@
 new_game_turn_1:
   game: new_game
+  number: 1
+  status: <%= Turn.statuses[:started] %>
   board:
     :north:
       :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
@@ -15,6 +17,8 @@ new_game_turn_1:
       :units:
 ongoing_game_turn_1:
   game: ongoing_game
+  number: 1
+  status: <%= Turn.statuses[:finished] %>
   board:
     :north:
       :occupant_id: <%= ActiveRecord::FixtureSet.identify :noemie %>
@@ -28,9 +32,10 @@ ongoing_game_turn_1:
     :east:
       :occupant_id:
       :units:
-  number: 1
 ongoing_game_turn_2:
   game: ongoing_game
+  number: 2
+  status: <%= Turn.statuses[:finished] %>
   board:
     # Noémie has attacked and eliminated Wyn, Steve has attacked Noémie but failed
     :north:
@@ -45,9 +50,10 @@ ongoing_game_turn_2:
     :east:
       :occupant_id:
       :units:
-  number: 2
 ongoing_game_turn_3:
   game: ongoing_game
+  number: 3
+  status: <%= Turn.statuses[:started] %>
   board:
     # Noémie has moved 1 unit back from West to North, Steve has once again attacked Noémie and failed
     :north:
@@ -62,4 +68,3 @@ ongoing_game_turn_3:
     :east:
       :occupant_id:
       :units:
-  number: 3

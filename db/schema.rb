@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_03_165434) do
     t.integer "game_id", null: false
     t.integer "number", default: 1, null: false
     t.text "board"
+    t.integer "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id", "number"], name: "index_turns_on_game_id_and_number", unique: true

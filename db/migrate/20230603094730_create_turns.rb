@@ -4,6 +4,7 @@ class CreateTurns < ActiveRecord::Migration[7.0]
       t.references :game, null: false, foreign_key: true
       t.integer :number, null: false, default: 1
       t.text :board
+      t.integer :status, null: false
 
       t.timestamps
     end
