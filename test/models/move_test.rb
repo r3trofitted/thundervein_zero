@@ -45,4 +45,14 @@ class MoveTest < ActiveSupport::TestCase
     refute move.valid?
     assert move.errors.of_kind? :units, :greater_than_or_equal_to
   end
+  
+  test "resolving a move" do
+    move = Move.create(turn: @new_game_turn_1, player: @steve, origin: :south, target: :east, units: 2)
+    
+    board_updates = move.resolve
+    
+    assert_equal 2, board_updates.size
+    assert_equal [Board::Zone.new(occupant: @steve, units: 1), :origin], board_updates[:south]
+    assert_equal [Board::Zone.new(occupant: @steve, units: 2), :target], board_updates[:east]
+  end
 end
