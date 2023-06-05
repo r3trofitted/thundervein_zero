@@ -75,8 +75,8 @@ class TurnTest < ActiveSupport::TestCase
   test "upon resolution, colliding attacks cancel each other" do
     turn = @new_game_turn_1
         
-    noemie_attack = Attack.create!(turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1)
-    steve_attack = Attack.create!(turn: turn, player: @steve, origin: :south, target: :west, units: 2, engagement: 2)
+    noemie_attack = Attack.create!(turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1, guess: 1)
+    steve_attack = Attack.create!(turn: turn, player: @steve, origin: :south, target: :west, units: 2, engagement: 2, guess: 2)
     
     turn.resolve! do |new_turn|
       assert_equal @wyn, new_turn.board.occupant_of(:west) # no change of occupant because the attacks were canceled
@@ -86,6 +86,43 @@ class TurnTest < ActiveSupport::TestCase
     
     assert noemie_attack.reload.canceled?
     assert steve_attack.reload.canceled?
+  end
+  
+  test "resolving a turn with an unresolved attack" do
+    turn = @new_game_turn_1
+    
+    attack = Attack.create! turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1
+    
+    refute turn.resolve!
+    assert turn.resolution_in_progress?
+  end
+  
+  test "resolving a turn with a successful attack" do
+    turn = @new_game_turn_1
+    
+    attack = Attack.create! turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1, guess: 2
+    
+    turn.resolve! do |new_turn|
+      assert_equal @noemie, new_turn.board.occupant_of(:west)
+      assert_equal 2, new_turn.board.units_in(:west)  # 2 units used for the attack
+      assert_equal 1, new_turn.board.units_in(:north) # 1 unit left behind
+    end
+    assert attack.reload.carried_out?
+    assert turn.finished?
+  end
+  
+  test "resolving a turn with an unsuccessful attack" do
+    turn = @new_game_turn_1
+    
+    attack = Attack.create! turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1, guess: 1
+    
+    turn.resolve! do |new_turn|
+      assert_equal @wyn, new_turn.board.occupant_of(:west)
+      assert_equal 3, new_turn.board.units_in(:west)  # no casualties for the defender
+      assert_equal 2, new_turn.board.units_in(:north) # one attacking unit lost, the other fell back to North
+    end
+    assert attack.reload.carried_out?
+    assert turn.finished?
   end
   
   # TODO
