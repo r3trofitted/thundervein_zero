@@ -63,4 +63,9 @@ class AttackTest < ActiveSupport::TestCase
     refute Attack.new(engagement: 2, guess: 1).failed?
     refute Attack.new(engagement: 2, guess: nil).failed?
   end
+  
+  test "an attack is all-in if all the units from the origin are used" do
+    assert Attack.new(turn: @ongoing_game_turn_1, origin: :south, units: 4).all_in?
+    refute Attack.new(turn: @ongoing_game_turn_1, origin: :south, units: 3).all_in?
+  end
 end

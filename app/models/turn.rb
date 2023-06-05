@@ -31,10 +31,10 @@ class Turn < ApplicationRecord
     
     attacks.to_carry_out.each do |attack|
       if attack.successful?
-        if attack.units < board.units_in(attack.origin)
-          new_turn.board.move(attack.units, from: attack.origin, to: attack.target)
-        else
+        if attack.all_in?
           new_turn.board.remove(:all, from: attack.target)
+        else
+          new_turn.board.move(attack.units, from: attack.origin, to: attack.target)
         end
       else
         new_turn.board.remove(attack.engagement, from: attack.origin)

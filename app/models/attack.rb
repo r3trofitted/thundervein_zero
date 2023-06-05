@@ -3,6 +3,10 @@ class Attack < Order
   validates :units, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: ->(a) { a.board.units_in(a.origin) } }
   validates :engagement, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: ->(a) { a.units } }
   
+  def all_in?
+    units == board.units_in(origin)
+  end
+  
   def pending?
     result.pending?
   end
