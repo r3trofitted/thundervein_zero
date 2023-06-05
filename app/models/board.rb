@@ -102,16 +102,4 @@ class Board
     new_units = (units == :all) ? 0 : [0, (zone.units - units)].max
     public_send "#{from}=", zone.with(units: new_units, occupant: (zone.occupant unless new_units.zero?))
   end
-  
-  ##
-  # Represents a zone on the board. A zone can be occupied (by a Player) and have units.
-  #
-  # (Note: I'm using Data here simply to try this new feature out; at the moment, 
-  # I'm not convinced that the immutability it offers over Struct is worth 
-  # anything here, but we'll see…)
-  Zone = Data.define(:occupant, :units) do
-    def occupied_by?(player)
-      occupant == player
-    end
-  end
 end
