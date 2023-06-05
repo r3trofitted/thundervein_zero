@@ -29,6 +29,15 @@ class Turn < ApplicationRecord
       move.carried_out!
     end
     
+    attacks.to_carry_out.each do |attack|
+      if attack.successful?
+        new_turn.board.move(attack.units - 1, from: attack.origin, to: attack.target)
+      else
+        new_turn.board.remove(attack.engagement, from: attack.origin)
+      end
+      attack.carried_out!
+    end
+    
     new_turn.save!
     
     yield new_turn if block_given?
