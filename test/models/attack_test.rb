@@ -68,4 +68,41 @@ class AttackTest < ActiveSupport::TestCase
     assert Attack.new(turn: @ongoing_game_turn_1, origin: :south, units: 4).all_in?
     refute Attack.new(turn: @ongoing_game_turn_1, origin: :south, units: 3).all_in?
   end
+  
+  test "resolving a successful attack" do
+    attack = Attack.new(turn: @new_game_turn_1, player: @noemie, origin: :north, target: :west, units: 2, engagement: 2, guess: 1)
+    
+    board_updates = attack.resolve
+    
+    assert_equal 2, board_updates.size
+    assert_equal [Board::Zone.new(occupant: @noemie, units: 1), :origin], board_updates[:north]
+    assert_equal [Board::Zone.new(occupant: @noemie, units: 2), :target], board_updates[:west]
+  end
+  
+  test "resolving a successful all-in attack" do
+    attack = Attack.new(turn: @new_game_turn_1, player: @noemie, origin: :north, target: :west, units: 3, engagement: 2, guess: 1)
+    
+    board_updates = attack.resolve
+    
+    assert_equal 1, board_updates.size
+    assert_equal [Board::Zone.new(occupant: nil, units: 0), :origin], board_updates[:west]
+  end
+    
+  test "resolving an unsuccessful attack" do
+    attack = Attack.new(turn: @new_game_turn_1, player: @noemie, origin: :north, target: :west, units: 2, engagement: 2, guess: 2)
+    
+    board_updates = attack.resolve
+    
+    assert_equal 1, board_updates.size
+    assert_equal [Board::Zone.new(occupant: @noemie, units: 1), :origin], board_updates[:north]
+  end
+    
+  test "resolving an unsuccessful all-in attack" do
+    attack = Attack.new(turn: @new_game_turn_1, player: @noemie, origin: :north, target: :west, units: 3, engagement: 3, guess: 3)
+    
+    board_updates = attack.resolve
+    
+    assert_equal 1, board_updates.size
+    assert_equal [Board::Zone.new(occupant: nil, units: 0), :origin], board_updates[:north]
+  end
 end

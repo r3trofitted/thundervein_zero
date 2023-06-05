@@ -71,6 +71,23 @@ class Board
   def adjacent?(a, b)
     b.to_sym.in? ADJACENCIES.fetch(a.to_sym)
   end
+
+  def update_for_move(units, from:, to:)
+    origin, target = self[from], self[to]
+    kept_units_on_target = target.occupied_by?(origin.occupant) ? target.units : 0
+    
+    Update.new(
+      "#{from}": [origin.with(units: origin.units - units), :origin],
+      "#{to}":   [target.with(units: kept_units_on_target + units, occupant: origin.occupant), :target]
+    )
+  end
+  
+  def update_for_remove(units, from:)
+    zone = self[from]
+    new_units = (units == :all) ? 0 : [0, (zone.units - units)].max
+    
+    Update.new("#{from}": [zone.with(units: new_units, occupant: (zone.occupant unless new_units.zero?)), :origin])
+  end
   
   def move(units, from:, to:)
     origin, target = self[from], self[to]

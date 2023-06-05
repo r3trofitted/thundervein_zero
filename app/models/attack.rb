@@ -19,6 +19,24 @@ class Attack < Order
     result.failed?
   end
   
+  def resolve
+    case result
+    when "successful"
+      if all_in?
+        board.update_for_remove(:all, from: target)
+      else
+        board.update_for_move(units, from: origin, to: target)
+      end
+    when "failed"
+      board.update_for_remove(engagement, from: origin)
+    else
+      # TODO: fail silently instead?
+      raise "Cannot resolve a pending attack"
+    end
+  end
+  
+  # TODO: renaming to outcome would make sense, since we now have a +#result+ method
+  # (and "result" sounds like what you get once you _resolve_ the attack)
   def result
     case guess
     when nil then "pending"
