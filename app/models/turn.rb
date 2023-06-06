@@ -1,4 +1,6 @@
 class Turn < ApplicationRecord
+  FinishedTurn = Class.new(StandardError)
+  
   belongs_to :game
   has_many :orders do
     def colliding
@@ -14,6 +16,8 @@ class Turn < ApplicationRecord
   enum :status, %i(started resolution_in_progress finished)
   
   def resolve!
+    raise FinishedTurn if finished?
+    
     resolution_in_progress!
     
     return false if orders.any? { |o| o.try(:pending?) } # TODO: add a dummy #pending to Order instead?
@@ -35,7 +39,7 @@ class Turn < ApplicationRecord
     end
     
     # creating the new turn with its updated board
-    new_turn = Turn.new(game: game, number: number + 1, board: board.revise(updates)) do |t|
+    new_turn = Turn.create!(game: game, number: number + 1, board: board.revise(updates)) do |t|
       yield t if block_given?
     end
     

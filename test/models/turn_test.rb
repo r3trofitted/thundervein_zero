@@ -18,6 +18,10 @@ class TurnTest < ActiveSupport::TestCase
     assert_includes orders_to_carry_out, valid_order
   end
   
+  test "resolving a finished turn raises an error" do
+    assert_raises(Turn::FinishedTurn) { @ongoing_game_turn_1.resolve! }
+  end
+  
   test "resolving a turn creates a new turn and yields it" do
     turn = @ongoing_game_turn_3
     
