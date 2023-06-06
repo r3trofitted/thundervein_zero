@@ -127,11 +127,43 @@ class TurnTest < ActiveSupport::TestCase
   
   # TODO
   test "resolving switcheroo attacks" do
-    skip "TODO – see design notes in docs/notes.md"
+    turn = @new_game_turn_1
+    
+    noemie_attack = Attack.create! turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 2, guess: 1
+    wyn_attack    = Attack.create! turn: turn, player: @wyn, origin: :west, target: :north, units: 2, engagement: 2, guess: 1
+    
+    turn.resolve! do |new_turn|
+      assert_equal @wyn, new_turn.board.occupant_of(:north)
+      assert_equal @noemie, new_turn.board.occupant_of(:west)
+      assert_equal 2, new_turn.board.units_in(:north) # Wyn has moved to units to North
+      assert_equal 2, new_turn.board.units_in(:west)  # Noémie has moved to units to West
+    end
+    
+    assert noemie_attack.reload.carried_out?
+    assert wyn_attack.reload.carried_out?
+    assert turn.finished?
   end
   
   # TODO
   test "resolving chained attacks" do
-    skip "TODO – see design notes in docs/notes.md"
+    turn = @new_game_turn_1
+    
+    noemie_attack = Attack.create! turn: turn, player: @noemie, origin: :north, target: :west, units: 2, engagement: 2, guess: 1
+    wyn_attack    = Attack.create! turn: turn, player: @wyn, origin: :west, target: :south, units: 2, engagement: 2, guess: 1
+    steve_attack  = Attack.create! turn: turn, player: @steve, origin: :south, target: :north, units: 2, engagement: 2, guess: 1
+    
+    turn.resolve! do |new_turn|
+      assert_equal @noemie, new_turn.board.occupant_of(:west)
+      assert_equal @wyn, new_turn.board.occupant_of(:south)
+      assert_equal @steve, new_turn.board.occupant_of(:north)
+      assert_equal 2, new_turn.board.units_in(:west)
+      assert_equal 2, new_turn.board.units_in(:south)
+      assert_equal 2, new_turn.board.units_in(:north)
+    end
+    
+    assert noemie_attack.reload.carried_out?
+    assert wyn_attack.reload.carried_out?
+    assert steve_attack.reload.carried_out?
+    assert turn.finished?
   end
 end

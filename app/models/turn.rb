@@ -16,44 +16,38 @@ class Turn < ApplicationRecord
   def resolve!
     resolution_in_progress!
     
-    return false if attacks.any? &:pending?
+    return false if orders.any? { |o| o.try(:pending?) } # TODO: add a dummy #pending to Order instead?
     
     # less efficient that +.update_all+, but perf is not an issue yet, so 
     # let's keep the callbacks and have the timestamps be taken care of along the status
     orders.colliding.each &:canceled!
     
-    new_turn = dup.tap { |t| t.increment :number }
+    orders_to_carry_out = orders.to_carry_out # caching to avoid another query later on
     
-    moves.to_carry_out.each do |move|
-      new_turn.board.move(move.units, from: move.origin, to: move.target)
-      move.carried_out!
-    end
+    # collecting all the board updates and managing "conflicts"
+    updates = orders_to_carry_out.flat_map(&:resolve)
+    updates.repeated_combination(2) do |a, b|
+      next if a == b
     
-    attacks.to_carry_out.each do |attack|
-      if attack.successful?
-        if attack.all_in?
-          new_turn.board.remove(:all, from: attack.target)
-        else
-          new_turn.board.move(attack.units, from: attack.origin, to: attack.target)
-        end
-      else
-        new_turn.board.remove(attack.engagement, from: attack.origin)
+      a.overlaping_zones_with(b).each do |zone|
+        [a, b].find { |u| u.origin_in? zone }.delete(zone)
       end
-      attack.carried_out!
     end
     
+    # converting the updates to actual Zones to assign the new board
+    new_zones = updates.map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
+    
+    # creating the new turn and its updated board
+    new_turn = dup.tap do |t|
+      t.increment :number
+      t.board.assign_attributes new_zones
+    end
     new_turn.save!
+    
+    orders_to_carry_out.each &:carried_out!
     
     yield new_turn if block_given?
     
     finished!
-  end
-  
-  def moves
-    orders.where(type: "Move")
-  end
-  
-  def attacks
-    orders.where(type: "Attack")
   end
 end
