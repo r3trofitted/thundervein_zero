@@ -6,7 +6,7 @@
 # specific class (maybe using +ActiveRecord::Attributes+).
 #
 # By the same token, the adjacency of zones is hardcoded (and simplistic), which
-#  could also prove inadequate once the board gets more complicated.
+# could also prove inadequate once the board gets more complicated.
 #
 # In the meantime, this is enough to start working on more exploratory stuff, 
 # such as giving orders by e-mail and resolving conflits.
@@ -72,12 +72,20 @@ class Board
     b.to_sym.in? ADJACENCIES.fetch(a.to_sym)
   end
   
+  # Applies update(s) to the board.
+  #
+  # Returns a new +Board+ object, with all the updates applied.
+  # (Note: the updates are _not_ checked for inconsistencies.)
   def revise(update_or_updates)
     new_zones = Array(update_or_updates).map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
     dup.tap { |b| b. assign_attributes(new_zones) }
   end
 
-  def update_for_move(units, from:, to:)
+  # Returns the update to apply to the board following the move of units.
+  # 
+  # If the destination and the origin have the same occupant, the units on the 
+  # destination will be kept; otherwise they will be replaced.
+  def move(units, from:, to:)
     origin, target = self[from], self[to]
     kept_units_on_target = target.occupied_by?(origin.occupant) ? target.units : 0
     
@@ -87,24 +95,14 @@ class Board
     )
   end
   
-  def update_for_remove(units, from:)
+  # Return the update to apply to the board following the removal of units.
+  #
+  # (Note: instead of a number of units, the special value +:all+ can be passed 
+  # to remove all the units.)
+  def remove(units, from:)
     zone = self[from]
     new_units = (units == :all) ? 0 : [0, (zone.units - units)].max
     
     Update.new("#{from}": [zone.with(units: new_units, occupant: (zone.occupant unless new_units.zero?)), :origin])
-  end
-  
-  def move(units, from:, to:)
-    origin, target = self[from], self[to]
-    kept_units_on_target = target.occupied_by?(origin.occupant) ? target.units : 0
-    
-    public_send "#{from}=", origin.with(units: origin.units - units)
-    public_send "#{to}=", target.with(units: kept_units_on_target + units, occupant: origin.occupant)
-  end
-  
-  def remove(units, from:)
-    zone = self[from]
-    new_units = (units == :all) ? 0 : [0, (zone.units - units)].max
-    public_send "#{from}=", zone.with(units: new_units, occupant: (zone.occupant unless new_units.zero?))
   end
 end
