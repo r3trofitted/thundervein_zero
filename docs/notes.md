@@ -15,6 +15,9 @@
 *   Special case: A attacks B but won't occupy, and C wants to move to B. _Technically_ these are colliding orders
     (both have the same target), but in practice, it _could_ be expected to work. I don't think it should, though, 
     because making it work is order-dependant (i.e. if the move was done _before_ the attack, what? It becomes an attack?)
+*   We could introduce a `UpdatesList` object to represent the list of updates (instead of a simple array in `Turn#resolve!`); 
+    this object would be in charge of merging its own content (therefore taking a piece of the logic in `Turn#resolve!`), and/or 
+    validate its own state, to ensure that no conflicting updates could be passed to `Board#revise`. Overkill?
 *   [x] There is a special case of attacks: the "switcheroo attacks", when a player from zone A attack a player from zone B, and
     at the same time, B attacks A. In this situation, nothing special happens if one attack succeeds but not the other, 
     or if both fail. However, if both attacks succeed, then we need to ensure that the game handle the post-victory 

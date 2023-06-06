@@ -34,11 +34,8 @@ class Turn < ApplicationRecord
       end
     end
     
-    # converting the updates to actual Zones to assign the new board
-    new_zones = updates.map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
-    
-    # creating the new turn and its updated board
-    new_turn = Turn.new(game: game, number: number + 1, board: board.revise(new_zones)) do |t|
+    # creating the new turn with its updated board
+    new_turn = Turn.new(game: game, number: number + 1, board: board.revise(updates)) do |t|
       yield t if block_given?
     end
     

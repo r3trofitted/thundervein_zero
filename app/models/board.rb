@@ -72,8 +72,9 @@ class Board
     b.to_sym.in? ADJACENCIES.fetch(a.to_sym)
   end
   
-  def revise(updates)
-    dup.tap { |b| b. assign_attributes(updates) }
+  def revise(update_or_updates)
+    new_zones = Array(update_or_updates).map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
+    dup.tap { |b| b. assign_attributes(new_zones) }
   end
 
   def update_for_move(units, from:, to:)
