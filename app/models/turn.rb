@@ -15,6 +15,37 @@ class Turn < ApplicationRecord
   serialize :board, Board
   enum :status, %i(started resolution_in_progress finished)
   
+  ##
+  # Resolves a turn.
+  #
+  # The resolution in the last phase of a turn; once in progress, no more orders can be passed.
+  # Resolving a turn is a process with several steps:
+  #
+  # - Canceling the colliding orders, if any.
+  # - Carrying out the other orders, thus collecting a list of _updates_ (+Board::Update+) to the game board.
+  # - Merging the updates, so that conflicting states can be resolved (see below).
+  # - Building a new +Turn+ object with an updated board.
+  #
+  # On top of this process, the turn status has to be updated when the resolution starts and ends.
+  #
+  # == Merging the updates
+  #
+  # Because all orders are supposed to happen simultaneously, the updates follows two orders may contradict
+  # one another. For example:
+  #
+  # - If players A and B attack each other (a "switcheroo attack"), and both attacks succeed, then the 
+  #   no update should include a directive to leave some units from an attack on its origin. (In other words: the units 
+  #   left behind by A are removed to make room for B's attacking units, and vice versa.)
+  # - If player A successfully attacks B and player B successfully attacks C, then update for B's attack 
+  #   should not include the leaving of units on its origin, since they are replaced by A's occupying units.
+  #
+  # == New turn
+  #
+  # When a turn is resolved, a new +Turn+ is created, *but not started*. This new turn is yielded.
+  #
+  # == Result
+  #
+  # Returns true if the resolution went through, false otherwise (e.g. if some orders are still pending).
   def resolve!
     raise FinishedTurn if finished?
     
