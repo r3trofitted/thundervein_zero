@@ -34,7 +34,7 @@ class Board
   def self.load(string)
     if string.present?
       data = YAML.load(string)
-      Board.new data.transform_values { |zone| Zone.new(occupant: Player.find_by(id: zone[:occupant_id]), units: zone[:units]) }
+      Board.new data.transform_values { |hex| Hex.new(occupant: Player.find_by(id: hex[:occupant_id]), units: hex[:units]) }
     else
       Board.new
     end
@@ -43,33 +43,33 @@ class Board
   def initialize(attributes = {})
     assign_attributes(attributes) if attributes
     
-    @north ||= Zone.new(occupant: nil, units: 0)
-    @east  ||= Zone.new(occupant: nil, units: 0)
-    @south ||= Zone.new(occupant: nil, units: 0)
-    @west  ||= Zone.new(occupant: nil, units: 0)
+    @north ||= Hex.new(occupant: nil, units: 0)
+    @east  ||= Hex.new(occupant: nil, units: 0)
+    @south ||= Hex.new(occupant: nil, units: 0)
+    @west  ||= Hex.new(occupant: nil, units: 0)
   end
   
-  def [](zone_name)
-    raise ArgumentError unless respond_to? zone_name
+  def [](zone)
+    raise ArgumentError unless respond_to? zone
     
-    zone = public_send(zone_name)
-    if zone.is_a? Zone
-      zone
+    hex = public_send(zone)
+    if hex.is_a? Hex
+      hex
     else
       raise ArgumentError
     end
   end
   
-  def occupant_of(zone_name)
-    self[zone_name].occupant
+  def occupant_of(zone)
+    self[zone].occupant
   end
   
-  def units_in(zone_name)
-    self[zone_name].units
+  def units_in(zone)
+    self[zone].units
   end
   
-  def adjacent?(a, b)
-    b.to_sym.in? ADJACENCIES.fetch(a.to_sym)
+  def adjacent?(zone_a, zone_b)
+    zone_b.to_sym.in? ADJACENCIES.fetch(zone_a.to_sym)
   end
   
   # Applies update(s) to the board.
@@ -77,8 +77,8 @@ class Board
   # Returns a new +Board+ object, with all the updates applied.
   # (Note: the updates are _not_ checked for inconsistencies.)
   def revise(update_or_updates)
-    new_zones = Array(update_or_updates).map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
-    dup.tap { |b| b. assign_attributes(new_zones) }
+    new_hexes = Array(update_or_updates).map(&:hexes).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
+    dup.tap { |b| b. assign_attributes(new_hexes) }
   end
 
   # Returns the update to apply to the board following the move of units.
@@ -100,9 +100,9 @@ class Board
   # (Note: instead of a number of units, the special value +:all+ can be passed 
   # to remove all the units.)
   def remove(units, from:)
-    zone = self[from]
-    new_units = (units == :all) ? 0 : [0, (zone.units - units)].max
+    hex = self[from]
+    new_units = (units == :all) ? 0 : [0, (hex.units - units)].max
     
-    Update.new("#{from}": [zone.with(units: new_units, occupant: (zone.occupant unless new_units.zero?)), :origin])
+    Update.new("#{from}": [hex.with(units: new_units, occupant: (hex.occupant unless new_units.zero?)), :origin])
   end
 end

@@ -3,6 +3,6 @@ class Move < Order
   validates :units, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than: ->(m) { m.board.units_in(m.origin) } }
   
   def resolve
-    board.update_for_move(units, from: origin, to: target)
+    board.move(units, from: origin, to: target)
   end
 end
