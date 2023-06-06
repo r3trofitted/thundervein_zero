@@ -38,15 +38,11 @@ class Turn < ApplicationRecord
     new_zones = updates.map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
     
     # creating the new turn and its updated board
-    new_turn = Turn.new(game: game, number: number + 1, board: board.dup.tap{|b| b.assign_attributes(new_zones)}) do |t|
+    new_turn = Turn.new(game: game, number: number + 1, board: board.revise(new_zones)) do |t|
       yield t if block_given?
     end
     
     orders_to_carry_out.each &:carried_out!
     finished!
-  end
-  
-  def next
-    
   end
 end

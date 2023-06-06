@@ -71,6 +71,10 @@ class Board
   def adjacent?(a, b)
     b.to_sym.in? ADJACENCIES.fetch(a.to_sym)
   end
+  
+  def revise(updates)
+    dup.tap { |b| b. assign_attributes(updates) }
+  end
 
   def update_for_move(units, from:, to:)
     origin, target = self[from], self[to]

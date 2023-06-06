@@ -70,4 +70,15 @@ class BoardTest < ActiveSupport::TestCase
     assert_equal 0, board.north.units
     assert_nil board.north.occupant
   end
+  
+  test "revising a board returns a copy with updates applied" do
+    board = Board.new(north: Board::Zone.new(occupant: @noemie, units: 4))
+    
+    revised = board.revise(south: Board::Zone.new(occupant: @steve, units: 2))
+    
+    assert_equal @noemie, revised.north.occupant
+    assert_equal 4, revised.north.units
+    assert_equal @steve, revised.south.occupant
+    assert_equal 2, revised.south.units
+  end
 end
