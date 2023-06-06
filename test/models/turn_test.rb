@@ -18,13 +18,20 @@ class TurnTest < ActiveSupport::TestCase
     assert_includes orders_to_carry_out, valid_order
   end
   
-  test "resolving a turn creates a new turn with a duplicated board and yields it" do
+  test "resolving a turn creates a new turn and yields it" do
     turn = @ongoing_game_turn_3
     
     turn.resolve! do |new_turn|
       assert_kind_of Turn, new_turn
       assert_equal 4, new_turn.number
-      
+      refute new_turn.status?
+    end
+  end
+  
+  test "when resolving a turn, the new turn has a copy of the board" do
+    turn = @ongoing_game_turn_3
+    
+    turn.resolve! do |new_turn|
       # TODO: add a comparison/equality method to Board?
       assert_equal new_turn.board.north, turn.board.north
       assert_equal new_turn.board.south, turn.board.south

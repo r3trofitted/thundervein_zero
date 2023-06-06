@@ -11,7 +11,7 @@ class Turn < ApplicationRecord
   end
   
   serialize :board, Board
-  enum :status, %i(started resolution_in_progress finished), default: :started
+  enum :status, %i(started resolution_in_progress finished)
   
   def resolve!
     resolution_in_progress!
@@ -38,16 +38,15 @@ class Turn < ApplicationRecord
     new_zones = updates.map(&:zones).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
     
     # creating the new turn and its updated board
-    new_turn = dup.tap do |t|
-      t.increment :number
-      t.board.assign_attributes new_zones
+    new_turn = Turn.new(game: game, number: number + 1, board: board.dup.tap{|b| b.assign_attributes(new_zones)}) do |t|
+      yield t if block_given?
     end
-    new_turn.save!
     
     orders_to_carry_out.each &:carried_out!
-    
-    yield new_turn if block_given?
-    
     finished!
+  end
+  
+  def next
+    
   end
 end
