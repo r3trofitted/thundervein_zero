@@ -11,7 +11,7 @@ class OrdersMailbox < ApplicationMailbox
   private
   
   def game
-    @game ||= Game.find_by_email_domain(mail.to_addresses.map(&:domain))
+    @game ||= Game.find_by(id: mail.to_addresses.map(&:domain).map(&:to_i))
   end
   
   # TODO: either find the game through the player, or the player through the game, or 
