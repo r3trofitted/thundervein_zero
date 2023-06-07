@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_06_193042) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_07_092357) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -70,15 +70,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_193042) do
     t.index ["turn_id"], name: "index_orders_on_turn_id"
   end
 
-  create_table "players", force: :cascade do |t|
+  create_table "participations", force: :cascade do |t|
     t.integer "game_id", null: false
+    t.integer "player_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id", "player_id"], name: "index_participations_on_game_id_and_player_id", unique: true
+    t.index ["game_id"], name: "index_participations_on_game_id"
+    t.index ["player_id"], name: "index_participations_on_player_id"
+  end
+
+  create_table "players", force: :cascade do |t|
     t.string "name", null: false
     t.string "email_address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["game_id", "email_address"], name: "index_players_on_game_id_and_email_address", unique: true
-    t.index ["game_id", "name"], name: "index_players_on_game_id_and_name", unique: true
-    t.index ["game_id"], name: "index_players_on_game_id"
+    t.index ["email_address"], name: "index_players_on_email_address", unique: true
   end
 
   create_table "turns", force: :cascade do |t|
@@ -96,6 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_06_193042) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "orders", "players"
   add_foreign_key "orders", "turns"
-  add_foreign_key "players", "games"
+  add_foreign_key "participations", "games"
+  add_foreign_key "participations", "players"
   add_foreign_key "turns", "games"
 end

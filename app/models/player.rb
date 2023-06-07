@@ -1,5 +1,7 @@
 class Player < ApplicationRecord
-  belongs_to :game
+  has_many :participations
+  has_many :games, through: :participations
+  
   has_many :orders
   has_many :turns, through: :orders
 end

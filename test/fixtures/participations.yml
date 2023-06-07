@@ -1,0 +1,19 @@
+noemie_in_new_game:
+  game: new_game
+  player: noemie
+steve_in_new_game:
+  game: new_game
+  player: steve
+wyn_in_new_game:
+  game: new_game
+  player: wyn
+
+noemie_in_ongoing_game:
+  game: ongoing_game
+  player: noemie
+steve_in_ongoing_game:
+  game: ongoing_game
+  player: steve
+wyn_in_ongoing_game:
+  game: ongoing_game
+  player: wyn
