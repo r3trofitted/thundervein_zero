@@ -3,17 +3,12 @@ require "test_helper"
 class OrdersMailboxTest < ActionMailbox::TestCase
   include ActionMailer::TestHelper
   
+  # this test is a sort of integration test, since it covers side-effects (such 
+  # as the sending of a confirmation email) but focuses on the happy path.
   test "receiving an order for an ongoing game" do
     # an order is created
     assert_difference -> { @new_game_turn_1.orders.count } do
-      receive_inbound_email_from_mail(
-        to: %Q|"Thundervein Zero (#{@new_game.id})" <orders@#{@new_game.id}.example.com>|,
-        from: @wyn.email_address,
-        subject: "New order",
-        body: <<~BODY
-          Move 2 units from West to East.
-        BODY
-      )
+      receive_inbound_email_from_fixture "valid_order.eml"
     end
     
     # the created order is correct

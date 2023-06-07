@@ -3,10 +3,11 @@ class OrdersMailbox < ApplicationMailbox
   
   before_processing :ensure_player_is_a_participant
   
+  # TODO: handle errors (e.g. if the current turn doesn't accept orders anymore)
   def process
     order = Order.from_text(mail.body.to_s) do |o|
       o.player = player
-      o.turn   = turn
+      o.turn   = game.current_turn
     end
     
     order.save!
@@ -31,9 +32,5 @@ class OrdersMailbox < ApplicationMailbox
       game_id = mail.to.grep(MATCHER) { $1 } # finds the first matching address and returns the captured group
       Game.includes(:players, :turns).find_by(id: game_id)
     end
-  end
-  
-  def turn
-    @turn ||= game.turns.started.last
   end
 end
