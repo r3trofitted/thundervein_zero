@@ -13,7 +13,11 @@
     the arbiter mailbox would have to do some analysis to understand that the email is about orders, and not 
     anything else game-related. (In other word: the _arbiter_ would be the referee chatbot, not _meant_ to 
     receive orders, but able to do so if necessary.)
-*   Let's have a realtime UI to supervise the ongoing games. (OK, realtime is overkill and certainly irrelevant in 
+*   Since TV-0 is a PBeM, let's make it possible to do _everything_ by email: have a list of all the available games, 
+    join a game, etc. Like a chatbot with a very cumbersome entry device.
+*   Because everything will be done by e-mail, there should be no need for a password nor login system: all info is sent 
+    to your email anyway. (Obviously, you're fucked if your email is compromised, but it's always the case anyway.)
+*   Let's also have a realtime UI to supervise the ongoing games. (OK, realtime is overkill and certainly irrelevant in 
     a turn-based, PBeM game, but it would be fun to build.)
 *   AR encrypted attributes could/should be used for the players' actual email address.
 *   Attacks will need a special "pending" status while the game waits for the defender to pick
