@@ -94,8 +94,25 @@ class Order < ApplicationRecord
     end
   end
   
+  ##
+  # Creates an Order object from instructions (in English).
+  #
+  # This is a *very* crude implementation – the instructions have to follow 
+  # a very precise format, like "move X units from A to B" or 
+  # "attack with X units from A to B".
+  #
+  # A smarter implementation, with possibly actual lexing, should eventually replace 
+  # this system.
+  #
+  # Like +.new+, this methods yields the new object.
   def self.from_text(text)
-    order = new(type: "Move", units: 2, origin: :west, target: :east) # SLIME
+    type   = /(move|attack)(?=\s+)/i.match(text).to_s.capitalize
+    units  = /\d+(?=\s+units?)/i.match(text).to_s
+    # for origin and target, a lookbehind cannot be used because Ruby only allows fixed-length lookbehinds
+    origin = /(?:from\s+)(\w+)/i.match(text)[1].downcase 
+    target = /(?:to\s+)(\w+)/i.match(text)[1].downcase
+    
+    order = new(type:, units:, origin:, target:)
     yield order if block_given?
     order
   end

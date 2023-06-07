@@ -1,6 +1,6 @@
 class OrdersMailbox < ApplicationMailbox
   def process
-    order = Order.from_text(mail.body) do |o|
+    order = Order.from_text(mail.body.to_s) do |o|
       o.player = player
       o.turn   = turn
     end
