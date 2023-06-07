@@ -1,3 +1,3 @@
 class ApplicationMailbox < ActionMailbox::Base
-  routing /^orders@\d+/i => :orders
+  routing OrdersMailbox::MATCHER => :orders
 end

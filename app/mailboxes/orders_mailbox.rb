@@ -1,4 +1,6 @@
 class OrdersMailbox < ApplicationMailbox
+  MATCHER = /^orders@(\d+)/i # e.g. orders@123456.thundervein-0.game for game 123456
+  
   before_processing :ensure_player_is_a_participant
   
   def process
@@ -26,7 +28,7 @@ class OrdersMailbox < ApplicationMailbox
 
   def game
     @game ||= begin
-      game_id = mail.to_addresses.map(&:domain).map(&:to_i)
+      game_id = mail.to.grep(MATCHER) { $1 } # finds the first matching address and returns the captured group
       Game.includes(:players, :turns).find_by(id: game_id)
     end
   end
