@@ -1,10 +1,17 @@
 class OrdersMailer < ApplicationMailer
-  before_action { @game, @player = params[:game], params[:player] }
+  before_action { @order = params[:order] }
 
-  default to:   -> { @player.email_address },
-          from: -> { orders_address(@game) }
+  default from: -> { orders_address(@order.game) }
 
-  def error_no_participation
-    mail
+  def confirmation
+    mail to: @order.player_email_address
+  end
+
+  # SMELL: no @order variable instance is needed – is this method in the right mailer?
+  def error_no_participation(game, player)
+    @game   = game
+    @player = player
+    
+    mail to: player.email_address
   end
 end

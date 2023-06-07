@@ -5,6 +5,9 @@ class Order < ApplicationRecord
   enum :status, %i(received carried_out canceled), default: :received
   
   delegate :board, to: :turn
+  delegate :email_address, to: :player, prefix: true
+  
+  after_create :send_confirmation
   
   concerning :Scopes do
     included do
@@ -115,5 +118,9 @@ class Order < ApplicationRecord
     order = new(type:, units:, origin:, target:)
     yield order if block_given?
     order
+  end
+  
+  def send_confirmation
+    OrdersMailer.with(order: self).confirmation.deliver_later
   end
 end
