@@ -16,7 +16,7 @@ class OrdersMailbox < ApplicationMailbox
     bounced! if player.nil?
       
     unless player.in? game.players
-      bounce_with OrdersMailer.error_no_participation(game, player)
+      bounce_with GamesMailer.error_no_participation(game, player)
     end
   end
   

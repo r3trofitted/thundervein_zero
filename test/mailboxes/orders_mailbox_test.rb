@@ -38,6 +38,6 @@ class OrdersMailboxTest < ActionMailbox::TestCase
     inbound_email = receive_inbound_email_from_mail to: %"orders@#{@new_game.id}.example.com", from: @eisha.email_address
     
     assert inbound_email.bounced?
-    assert_enqueued_email_with OrdersMailer, :error_no_participation, args: [@new_game, @eisha]
+    assert_enqueued_email_with GamesMailer, :error_no_participation, args: [@new_game, @eisha]
   end
 end

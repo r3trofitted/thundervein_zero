@@ -4,7 +4,8 @@ class Order < ApplicationRecord
   
   enum :status, %i(received carried_out canceled), default: :received
   
-  delegate :board, to: :turn
+  delegate :board, :game_id, to: :turn
+  delegate :number, to: :turn, prefix: true
   delegate :email_address, to: :player, prefix: true
   
   after_create :send_confirmation
