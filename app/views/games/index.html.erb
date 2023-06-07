@@ -16,7 +16,7 @@
           <% game.players.each { |p| concat(content_tag :li, p.email) } %>
         </ul>
       </td>
-      <td><%= game.turn %></td>
+      <td><%= game.current_turn.number %></td>
     </tr>
     <% end %>
   </tbody>
