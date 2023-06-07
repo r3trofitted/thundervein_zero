@@ -34,7 +34,7 @@ class Board
   def self.load(string)
     if string.present?
       data = YAML.load(string)
-      Board.new data.transform_values { |hex| Hex.new(occupant: Player.find_by(id: hex[:occupant_id]), units: hex[:units]) }
+      Board.new data.transform_values { |tile| Tile.new(occupant: Player.find_by(id: tile[:occupant_id]), units: tile[:units]) }
     else
       Board.new
     end
@@ -43,18 +43,18 @@ class Board
   def initialize(attributes = {})
     assign_attributes(attributes) if attributes
     
-    @north ||= Hex.new(occupant: nil, units: 0)
-    @east  ||= Hex.new(occupant: nil, units: 0)
-    @south ||= Hex.new(occupant: nil, units: 0)
-    @west  ||= Hex.new(occupant: nil, units: 0)
+    @north ||= Tile.new(occupant: nil, units: 0)
+    @east  ||= Tile.new(occupant: nil, units: 0)
+    @south ||= Tile.new(occupant: nil, units: 0)
+    @west  ||= Tile.new(occupant: nil, units: 0)
   end
   
   def [](zone)
     raise ArgumentError unless respond_to? zone
     
-    hex = public_send(zone)
-    if hex.is_a? Hex
-      hex
+    tile = public_send(zone)
+    if tile.is_a? Tile
+      tile
     else
       raise ArgumentError
     end
@@ -77,8 +77,8 @@ class Board
   # Returns a new +Board+ object, with all the updates applied.
   # (Note: the updates are _not_ checked for inconsistencies.)
   def revise(update_or_updates)
-    new_hexes = Array(update_or_updates).map(&:hexes).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
-    dup.tap { |b| b. assign_attributes(new_hexes) }
+    new_tiles = Array(update_or_updates).map(&:tiles).reduce(:merge).to_h # forcing the conversion to Hash in case there are no updates
+    dup.tap { |b| b. assign_attributes(new_tiles) }
   end
 
   # Returns the update to apply to the board following the move of units.
@@ -100,9 +100,9 @@ class Board
   # (Note: instead of a number of units, the special value +:all+ can be passed 
   # to remove all the units.)
   def remove(units, from:)
-    hex = self[from]
-    new_units = (units == :all) ? 0 : [0, (hex.units - units)].max
+    tile = self[from]
+    new_units = (units == :all) ? 0 : [0, (tile.units - units)].max
     
-    Update.new("#{from}": [hex.with(units: new_units, occupant: (hex.occupant unless new_units.zero?)), :origin])
+    Update.new("#{from}": [tile.with(units: new_units, occupant: (tile.occupant unless new_units.zero?)), :origin])
   end
 end

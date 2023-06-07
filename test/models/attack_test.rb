@@ -1,25 +1,25 @@
 require "test_helper"
 
 class AttackTest < ActiveSupport::TestCase
-  test "a player cannot attack from a hex they don't occupy" do
+  test "a player cannot attack from a tile they don't occupy" do
     attack = Attack.new(turn: @ongoing_game_turn_1, player: @steve, origin: :north, target: :east, units: 4, engagement: 4)
     refute attack.valid?
     assert attack.errors.of_kind? :origin, :not_occupied_by_player 
   end
   
-  test "a player cannot attack an empty hex" do
+  test "a player cannot attack an empty tile" do
     attack = Attack.new(turn: @new_game_turn_1, player: @steve, origin: :south, target: :east, units: 1, engagement: 1)
     refute attack.valid?
     assert attack.errors.of_kind? :target, :empty
   end
 
-  test "a player cannot attack a hex they themselves occupy" do
+  test "a player cannot attack a tile they themselves occupy" do
     attack = Attack.new(turn: @ongoing_game_turn_3, player: @noemie, origin: :north, target: :west, units: 2, engagement: 1)
     refute attack.valid?
     assert attack.errors.of_kind? :target, :occupied_by_player
   end
     
-  test "a player cannot attack a hex that is not adjacent to the origin hex" do
+  test "a player cannot attack a tile that is not adjacent to the origin tile" do
     attack = Attack.new(turn: @ongoing_game_turn_1, player: @noemie, origin: :north, target: :east, units: 2, engagement: 1)
     refute attack.valid?
     assert attack.errors.of_kind? :target, :must_be_adjacent
@@ -75,8 +75,8 @@ class AttackTest < ActiveSupport::TestCase
     board_updates = attack.resolve
     
     assert_equal 2, board_updates.size
-    assert_equal [Board::Hex.new(occupant: @noemie, units: 1), :origin], board_updates[:north]
-    assert_equal [Board::Hex.new(occupant: @noemie, units: 2), :target], board_updates[:west]
+    assert_equal [Board::Tile.new(occupant: @noemie, units: 1), :origin], board_updates[:north]
+    assert_equal [Board::Tile.new(occupant: @noemie, units: 2), :target], board_updates[:west]
   end
   
   test "resolving a successful all-in attack" do
@@ -85,7 +85,7 @@ class AttackTest < ActiveSupport::TestCase
     board_updates = attack.resolve
     
     assert_equal 1, board_updates.size
-    assert_equal [Board::Hex.new(occupant: nil, units: 0), :origin], board_updates[:west]
+    assert_equal [Board::Tile.new(occupant: nil, units: 0), :origin], board_updates[:west]
   end
     
   test "resolving an unsuccessful attack" do
@@ -94,7 +94,7 @@ class AttackTest < ActiveSupport::TestCase
     board_updates = attack.resolve
     
     assert_equal 1, board_updates.size
-    assert_equal [Board::Hex.new(occupant: @noemie, units: 1), :origin], board_updates[:north]
+    assert_equal [Board::Tile.new(occupant: @noemie, units: 1), :origin], board_updates[:north]
   end
     
   test "resolving an unsuccessful all-in attack" do
@@ -103,6 +103,6 @@ class AttackTest < ActiveSupport::TestCase
     board_updates = attack.resolve
     
     assert_equal 1, board_updates.size
-    assert_equal [Board::Hex.new(occupant: nil, units: 0), :origin], board_updates[:north]
+    assert_equal [Board::Tile.new(occupant: nil, units: 0), :origin], board_updates[:north]
   end
 end
