@@ -1,12 +1,12 @@
 noemie:
   game: ongoing_game
   name: Noenie North
-  email: noemie@example.com
+  email_address: noemie@example.com
 steve:
   game: ongoing_game
   name: Steve South
-  email: steve@example.com
+  email_address: steve@example.com
 wyn:
   game: ongoing_game
   name: Wyn West
-  email: wyn@example.com
+  email_address: wyn@example.com

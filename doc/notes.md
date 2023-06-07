@@ -9,6 +9,12 @@
     (to give orders), there should be a easy way to chose the right recipient, and more 
     importantly, some kind of safeguard to avoid sending something sensible to the wrong 
     person (e.g. sending actual game orders to a player).
+*   It could be nice if orders could be sent to a more generic `arbiter@…` address, instead of `orders@…`. But then, 
+    the arbiter mailbox would have to do some analysis to understand that the email is about orders, and not 
+    anything else game-related. (In other word: the _arbiter_ would be the referee chatbot, not _meant_ to 
+    receive orders, but able to do so if necessary.)
+*   Let's have a realtime UI to supervise the ongoing games. (OK, realtime is overkill and certainly irrelevant in 
+    a turn-based, PBeM game, but it would be fun to build.)
 *   AR encrypted attributes could/should be used for the players' actual email address.
 *   Attacks will need a special "pending" status while the game waits for the defender to pick
     a guess. Which means, in turn (ah ah) that a turn resolution will not be atomic.

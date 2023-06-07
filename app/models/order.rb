@@ -93,4 +93,10 @@ class Order < ApplicationRecord
       validates :target, adjacent: { to: :origin }
     end
   end
+  
+  def self.from_text(text)
+    order = new(type: "Move", units: 2, origin: :west, target: :east) # SLIME
+    yield order if block_given?
+    order
+  end
 end
