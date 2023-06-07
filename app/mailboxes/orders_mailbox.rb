@@ -1,4 +1,6 @@
 class OrdersMailbox < ApplicationMailbox
+  before_processing :ensure_player_is_a_participant
+  
   def process
     order = Order.from_text(mail.body.to_s) do |o|
       o.player = player
@@ -10,14 +12,23 @@ class OrdersMailbox < ApplicationMailbox
   
   private
   
-  def game
-    @game ||= Game.find_by(id: mail.to_addresses.map(&:domain).map(&:to_i))
+  def ensure_player_is_a_participant
+    bounced! if player.nil?
+      
+    unless player.in? game.players
+      bounce_with OrdersMailer.with(game:, player:).error_no_participation
+    end
   end
   
-  # TODO: either find the game through the player, or the player through the game, or 
-  # check that the player is indeed playing the game (and that the game is open to orders…)
   def player
     @player ||= Player.find_by(email_address: mail.from)
+  end
+
+  def game
+    @game ||= begin
+      game_id = mail.to_addresses.map(&:domain).map(&:to_i)
+      Game.includes(:players, :turns).find_by(id: game_id)
+    end
   end
   
   def turn

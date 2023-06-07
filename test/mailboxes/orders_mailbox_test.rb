@@ -1,6 +1,8 @@
 require "test_helper"
 
 class OrdersMailboxTest < ActionMailbox::TestCase
+  include ActionMailer::TestHelper
+  
   test "receiving an order for an ongoing game" do
     assert_difference -> { @new_game_turn_1.orders.count } do
       receive_inbound_email_from_mail(
@@ -20,5 +22,17 @@ class OrdersMailboxTest < ActionMailbox::TestCase
     assert_equal "east", move_order.target
     assert_equal 2, move_order.units
     assert move_order.received?
+  end
+  
+  test "receiving an order by an unknown player" do
+    inbound_email = receive_inbound_email_from_mail to: "orders@#{@new_game.id}.example.com", from: "unknown@example.com"
+    assert inbound_email.bounced?
+  end
+  
+  test "receiving an order for a wrong game" do
+    inbound_email = receive_inbound_email_from_mail to: %"orders@#{@new_game.id}.example.com", from: @eisha.email_address
+    
+    assert inbound_email.bounced?
+    assert_enqueued_email_with OrdersMailer, :error_no_participation, args: { game: @new_game, player: @eisha }
   end
 end
