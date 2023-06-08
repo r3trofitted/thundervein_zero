@@ -13,17 +13,12 @@ class ArbiterMailbox < ApplicationMailbox
       
       order.save!
     when command.join?
-      # SLIME
       game.add_participant name: mail.from_address.display_name, email_address: mail.from_address.address
     end
   end
   
   def command
-    @command ||= case mail.subject
-                 when /^join$/i then "join"
-                 when /^(move|attack|order)$/i then "order"
-                 else ""
-                 end.inquiry
+    @command ||= Arbiter.parse_command(mail.subject)
   end
   
   def ensure_player_is_a_participant
