@@ -1,4 +1,3 @@
 class ApplicationMailbox < ActionMailbox::Base
-  routing OrdersMailbox::MATCHER => :orders
-  routing CommandsMailbox::MATCHER => :commands
+  routing ArbiterMailbox::MATCHER => :arbiter
 end
