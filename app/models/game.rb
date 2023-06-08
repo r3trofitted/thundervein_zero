@@ -4,4 +4,11 @@ class Game < ApplicationRecord
   
   has_many :participations
   has_many :players, through: :participations
+  
+  def add_participant(name:, email_address:)
+    player = Player.find_or_initialize_by(email_address: email_address)
+    player.name = name
+    
+    players << player
+  end
 end

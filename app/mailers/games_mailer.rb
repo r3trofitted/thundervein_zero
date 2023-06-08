@@ -4,6 +4,10 @@ class GamesMailer < ApplicationMailer
   default from: -> { arbiter_address },
           to:   -> { @player.email_address }
 
+  def participation
+    mail
+  end
+
   def error_no_participation
     mail
   end
