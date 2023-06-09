@@ -117,16 +117,14 @@ class Order < ApplicationRecord
   # this system.
   #
   # Like +.new+, this methods yields the new object.
-  def self.from_text(text)
+  def self.from_text(text, &block)
     type   = /(move|attack)(?=\s+)/i.match(text).to_s.capitalize
     units  = /\d+(?=\s+units?)/i.match(text).to_s
     # for origin and target, a lookbehind cannot be used because Ruby only allows fixed-length lookbehinds
-    origin = /(?:from\s+)(\w+)/i.match(text)[1].downcase 
-    target = /(?:to\s+)(\w+)/i.match(text)[1].downcase
+    origin = /(?:from\s+)(\w+)/i.match(text) { |m| m[1].downcase }
+    target = /(?:to\s+)(\w+)/i.match(text) { |m| m[1].downcase }
     
-    order = new(type:, units:, origin:, target:)
-    yield order if block_given?
-    order
+    new type:, units:, origin:, target:, &block
   end
   
   def send_confirmation
