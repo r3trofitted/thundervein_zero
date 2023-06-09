@@ -1,4 +1,4 @@
-class GamesMailer < ApplicationMailer
+class ArbiterMailer < ApplicationMailer
   before_action { @game, @player = params[:game], params[:player] }
 
   default from: -> { arbiter_address },
@@ -8,7 +8,7 @@ class GamesMailer < ApplicationMailer
     mail
   end
 
-  def error_no_participation
+  def command_failed(errors)
     mail
   end
   

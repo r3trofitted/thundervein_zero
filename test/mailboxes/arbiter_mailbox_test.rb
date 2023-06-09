@@ -16,7 +16,7 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
     move_order = @wyn.orders.last
     assert_kind_of Move, move_order
     assert_equal @new_game_turn_1, move_order.turn
-    assert_equal "west", move_order.origin # this casting to a String is getting tedious
+    assert_equal "west", move_order.origin # TODO: this casting to a String is getting tedious
     assert_equal "east", move_order.target
     assert_equal 2, move_order.units
     assert move_order.received?
@@ -43,15 +43,14 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
     assert_enqueued_email_with ArbiterMailer, :participation, params: { game: game, player: nigel }
   end
   
-  test "receiving an order by an unknown player" do
-    inbound_email = receive_inbound_email_from_mail to: "arbiter@#{@new_game.id}.example.com", from: "unknown@example.com", subject: "order"
-    assert inbound_email.bounced?
+  test "receiving a command with an non-existent game id" do
+    assert receive_inbound_email_from_mail(to: "command@123.example.com").bounced?
   end
-  
+
   test "receiving an order for a wrong game" do
-    inbound_email = receive_inbound_email_from_mail to: %"arbiter@#{@new_game.id}.example.com", from: @eisha.email_address, subject: "order"
+    inbound_email = receive_inbound_email_from_mail to: "arbiter@#{@new_game.id}.example.com", from: @eisha.email_address, subject: "order"
     
     assert inbound_email.bounced?
-    assert_enqueued_email_with GamesMailer, :error_no_participation, args: [@new_game, @eisha]
+    assert_enqueued_email_with ArbiterMailer, :command_failed, params: { game: @new_game, player: @eisha }, args: [{:player=>[{:error=>:must_be_a_participant}]}]
   end
 end

@@ -5,6 +5,6 @@ class Participation < ApplicationRecord
   after_create :notify
   
   def notify
-    GamesMailer.with(game:, player:).participation.deliver_later
+    ArbiterMailer.with(game:, player:).participation.deliver_later
   end
 end
