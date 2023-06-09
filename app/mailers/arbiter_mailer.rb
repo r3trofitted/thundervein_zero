@@ -9,6 +9,7 @@ class ArbiterMailer < ApplicationMailer
   end
 
   def command_failed(errors)
+    p errors
     mail
   end
   

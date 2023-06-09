@@ -54,8 +54,8 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
     # the first and only arg should be a hash of details on each invalid attribute; we're looking for "player must be a participant"
     matcher = ->(args) {
       a = args.first
-      # a.has_key?(:player) && a[:player].any? { |details| details >= { error: :must_be_a_participant } }
-      a[:player].to_a.include? :must_be_a_participant
+      a.has_key?(:player) && a[:player].any? { |details| details >= { error: :must_be_a_participant } }
+      # a[:player].to_a.include? :must_be_a_participant
     }
     assert_enqueued_email_with ArbiterMailer, :command_failed, params: { game: @new_game, player: @eisha }, args: matcher
   end
