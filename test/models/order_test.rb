@@ -1,7 +1,7 @@
 require "test_helper"
 
 class OrderTest < ActiveSupport::TestCase
-  test "Order.from_text" do
+  test "building an Order from a text" do
     order = Order.from_text "Move 2 units from North to South"
     
     assert_instance_of Move, order
