@@ -22,7 +22,7 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
     assert move_order.received?
     
     # a confirmation email is sent
-    assert_enqueued_email_with OrdersMailer, :confirmation, args: { order: move_order }
+    assert_enqueued_email_with OrdersMailer, :confirmation, params: { order: move_order }
   end
   
   test "integration: joining a game" do
@@ -40,7 +40,7 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
     assert_equal "Nigel Newcomer", nigel.name
     assert_equal "nigel@example.com", nigel.email_address
     
-    assert_enqueued_email_with GamesMailer, :participation, args: { game: game, player: nigel }
+    assert_enqueued_email_with ArbiterMailer, :participation, params: { game: game, player: nigel }
   end
   
   test "receiving an order by an unknown player" do

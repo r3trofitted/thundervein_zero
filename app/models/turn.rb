@@ -12,7 +12,7 @@ class Turn < ApplicationRecord
     end
   end
   
-  serialize :board, Board
+  serialize :board, coder: Board
   enum :status, %i(started resolution_in_progress finished)
   
   ##
