@@ -1,5 +1,5 @@
 class Command
-  include ActiveModel::Validations
+  # include ActiveModel::Validations
   
   attr_reader :game
   
@@ -15,11 +15,15 @@ class Command
   end
   
   def execute
-    begin
-      validate!
+    # begin
+      # validate!
       do_execute
-    rescue ActiveModel::ValidationError
-      false
-    end
+    # rescue ActiveModel::ValidationError
+      # false
+    # end
+  end
+  
+  def errors
+    
   end
 end

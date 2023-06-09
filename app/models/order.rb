@@ -4,7 +4,7 @@ class Order < ApplicationRecord
   
   enum :status, %i(received carried_out canceled), default: :received
   
-  delegate :board, :game_id, to: :turn
+  delegate :board, :game, :game_id, to: :turn
   delegate :number, to: :turn, prefix: true
   delegate :email_address, to: :player, prefix: true
   
@@ -103,6 +103,7 @@ class Order < ApplicationRecord
     included do
       validates :origin, presence: true, occupied_by_player: true
       validates :target, adjacent: { to: :origin }
+      validate { errors.add(:player, :must_be_a_participant) unless player.in? game.players }
     end
   end
   

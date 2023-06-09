@@ -7,7 +7,7 @@ class ArbiterMailbox < ApplicationMailbox
     command = Command.from_mail(mail, game:)
     
     unless command.execute
-      bounce_with ArbiterMailer.with(game:, player: command.try(:player)).command_failed(command.errors.details)
+      bounce_with ArbiterMailer.with(game:, player: command.try(:player)).command_failed(command.errors)
     end
   end
   
