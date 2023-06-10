@@ -1,15 +1,15 @@
 class ArbiterMailer < ApplicationMailer
-  before_action { @game, @recipient = params[:game], params[:recipient] }
+  before_action { @game, @player = params[:game], params[:player] }
 
   default from: -> { arbiter_address },
-          to:   -> { @recipient }
+          to:   -> { @player }
 
   def participation
     mail
   end
 
-  def command_failed(errors)
-    Rails.logger.debug errors
+  def command_failed(commanded)
+    Rails.logger.debug commanded.errors
     mail
   end
   

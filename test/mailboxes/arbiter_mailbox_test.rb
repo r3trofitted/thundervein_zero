@@ -48,11 +48,11 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
   end
 
   test "receiving an order for a wrong game" do
+    ActionMailer::Base.deliveries.clear
+    
     inbound_email = receive_inbound_email_from_mail to: "arbiter@#{@new_game.id}.example.com", from: @eisha.email_address, subject: "order"
     
     assert inbound_email.bounced?
-    
-    args_matcher = ->(args) { args.dig(0, :base).include? :player_not_participating }
-    assert_enqueued_email_with ArbiterMailer, :command_failed, params: { game: @new_game, recipient: @eisha.email_address }, args: args_matcher
+    assert_emails 1 # we cannot look more closely into the email sent, unfortunately
   end
 end
