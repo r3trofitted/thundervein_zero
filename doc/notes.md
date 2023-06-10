@@ -46,3 +46,4 @@
 ## Miscellaneous
 
 *   **Jargon**: _Tile_ is the object that represents a section of the board; in game, theses sections are called _zones_.
+*   Counter cache on game.turns?

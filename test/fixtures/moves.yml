@@ -3,7 +3,7 @@ noemie_move_in_ongoing_game_turn_2:
   turn: ongoing_game_turn_2
   player: noemie
   origin: west
-  target: northh
+  target: north
   units: 1
   status: <%= Order.statuses[:carried_out] %>
 
