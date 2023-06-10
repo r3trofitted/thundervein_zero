@@ -1,3 +1,6 @@
+require "errors_ext"
+using ErrorsExt
+
 class ArbiterMailbox < ApplicationMailbox
   MATCHER = /^(?:arbiter|commands?)@(\d+)/i # e.g. arbiter@123456.thundervein-0.game for game 123456
   
@@ -14,7 +17,7 @@ class ArbiterMailbox < ApplicationMailbox
                 end
   
     unless commanded.save
-      bounce_with ArbiterMailer.with(game:, player: commanded.player).command_failed(commanded.errors.details)
+      bounce_with ArbiterMailer.with(game:, recipient: commanded.player.email_address).command_failed(commanded.errors.types_only)
     end
   end
   
@@ -25,11 +28,10 @@ class ArbiterMailbox < ApplicationMailbox
   private
   
   def new_participation
-    player = Player.find_or_initialize_by(email_address: mail.from_address.address).tap { |p| p.name ||= mail.from_address.display_name }
-    # TODO: @game.participations.build_for_new_or_existing_player(email_address: …)
-    # TODO: or use accepts_nested_attributes instead?
-    
-    @game.participations.build(player: player)
+    @game.participations.build(player_attributes: {
+                                                    email_address: mail.from_address.address, 
+                                                    name: mail.from_address.display_name
+                                                  })
   end
   
   def new_order
@@ -40,6 +42,7 @@ class ArbiterMailbox < ApplicationMailbox
   end
   
   def new_status_report
+    # TODO
     game.status_report
   end
 end

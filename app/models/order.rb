@@ -103,7 +103,21 @@ class Order < ApplicationRecord
     included do
       validates :origin, presence: true, occupied_by_player: true
       validates :target, adjacent: { to: :origin }
-      validate { errors.add(:player, :must_be_a_participant) unless player.in? game.players }
+      validate :player_is_participating, :turn_is_started, :no_order_already_given, on: :create
+    end
+    
+    private
+    
+    def player_is_participating
+      errors.add(:base, :player_not_participating) unless player.in? game.players
+    end
+    
+    def turn_is_started
+      errors.add(:base, :turn_resolution_in_progress) unless turn.started? # FIXME: better error name
+    end
+    
+    def no_order_already_given
+      errors.add(:base, :order_already_given) if turn.orders.exists?(player: player)
     end
   end
   

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_07_092357) do
+ActiveRecord::Schema[7.1].define(version: 2023_06_07_092357) do
   create_table "action_mailbox_inbound_emails", force: :cascade do |t|
     t.integer "status", default: 0, null: false
     t.string "message_id", null: false
@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_092357) do
   end
 
   create_table "games", force: :cascade do |t|
+    t.integer "max_players", default: 4, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
