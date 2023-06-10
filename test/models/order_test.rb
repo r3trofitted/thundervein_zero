@@ -17,4 +17,9 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal "west", order.origin
     assert_equal "south", order.target
   end
+  
+  # test "a player cannot give an Order for a game they're not playing in"
+  # test "Orders can only be created for ongoing games"
+  # test "Orders can only be created before a turn's resolution"
+  # test "a given order can only be given once"
 end

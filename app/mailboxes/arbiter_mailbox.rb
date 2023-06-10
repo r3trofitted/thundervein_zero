@@ -4,11 +4,17 @@ class ArbiterMailbox < ApplicationMailbox
   before_processing :bounced!, if: -> { game.blank? }
   
   def process
-    case mail.subject
-    when /^join$/i
-      join_game
-    when /^(move|attack|order)$/i
-      receive_order
+    commanded = case mail.subject
+                when /^join$/i
+                  new_participation
+                when /^(move|attack|order)$/i
+                  new_order
+                when /^status(\s+(report|update))?$/i
+                  new_status_report
+                end
+  
+    unless commanded.save
+      bounce_with ArbiterMailer.with(game:, player: commanded.player).command_failed(commanded.errors.details)
     end
   end
   
@@ -18,25 +24,22 @@ class ArbiterMailbox < ApplicationMailbox
   
   private
   
-  def join_game
+  def new_participation
     player = Player.find_or_initialize_by(email_address: mail.from_address.address).tap { |p| p.name ||= mail.from_address.display_name }
-    participation = @game.participations.build(player: player)
+    # TODO: @game.participations.build_for_new_or_existing_player(email_address: …)
+    # TODO: or use accepts_nested_attributes instead?
     
-    unless participation.save
-      bounce_with ArbiterMailer.with(game:, player:).command_failed(participation.errors.details)
+    @game.participations.build(player: player)
+  end
+  
+  def new_order
+    Order.from_text(mail.body.to_s) do |o|
+      o.player = Player.find_by email_address: mail.from
+      o.turn   = game.current_turn
     end
   end
   
-  def receive_order
-    player = Player.find_by email_address: mail.from
-    
-    order = Order.from_text(mail.body.to_s) do |o|
-      o.player = player
-      o.turn   = game.current_turn
-    end
-    
-    unless order.save
-      bounce_with ArbiterMailer.with(game:, player:).command_failed(order.errors.details)
-    end
+  def new_status_report
+    game.status_report
   end
 end
