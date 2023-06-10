@@ -1,4 +1,6 @@
 class Participation < ApplicationRecord
+  include Commandable
+  
   belongs_to :game
   belongs_to :player
   

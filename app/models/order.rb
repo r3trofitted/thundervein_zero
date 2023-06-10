@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  include Commandable
+  
   belongs_to :turn
   belongs_to :player
   
