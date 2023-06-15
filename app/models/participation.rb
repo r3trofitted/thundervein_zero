@@ -15,7 +15,7 @@ class Participation < ApplicationRecord
   after_create :notify
   
   def notify
-    ArbiterMailer.with(game:, player:).participation.deliver_later
+    ParticipationsMailer.with(participation: self).participation_confirmed.deliver_later
   end
   
   def game_must_not_be_already_started

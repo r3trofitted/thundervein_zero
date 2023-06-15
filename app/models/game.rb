@@ -12,4 +12,8 @@ class Game < ApplicationRecord
   def full?
     players.count >= max_players
   end
+  
+  def arbiter_email_address
+    "arbiter@#{id}.thundervein-0.game" # TODO: make the domain configurable?
+  end
 end
