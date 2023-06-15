@@ -1,7 +1,7 @@
 require "action_mailbox_ext"
 using ActionMailboxExt
 
-class ArbiterMailbox < ApplicationMailbox
+class CommandsMailbox < ApplicationMailbox
   MATCHER = /^(?:arbiter|commands?)@(\d+)/i # e.g. arbiter@123456.thundervein-0.game for game 123456
   
   before_processing :bounced!, if: -> { game.blank? }
@@ -17,9 +17,10 @@ class ArbiterMailbox < ApplicationMailbox
                 end
   
     unless commanded.save
-      bounce_with ArbiterMailer.with(game:, player: commanded.player)
-                               .command_failed(commanded),
-                               deliver_now: true # skipping ActiveJob because player may not be serializable
+      # TODO: call a more specializer mailer, if available? (e.g. OrdersMailer if commanded is a +Order+)
+      bounce_with CommandsMailer.with(game:, player: commanded.player)
+                                .command_failed(commanded),
+                                deliver_now: true # skipping ActiveJob because player may not be serializable
     end
   end
   

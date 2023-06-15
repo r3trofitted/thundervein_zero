@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ArbiterMailboxTest < ActionMailbox::TestCase
+class CommandsMailboxTest < ActionMailbox::TestCase
   include ActionMailer::TestHelper
   
   # These tests are like integration tests, since they cover side-effects (such 
@@ -40,7 +40,7 @@ class ArbiterMailboxTest < ActionMailbox::TestCase
     assert_equal "Nigel Newcomer", nigel.name
     assert_equal "nigel@example.com", nigel.email_address
     
-    assert_enqueued_email_with ArbiterMailer, :participation, params: { game: game, player: nigel }
+    assert_enqueued_email_with ParticipationsMailer, :participation_confirmed, params: { participation: nigel.participations.find_by(game: game) }
   end
   
   test "receiving a command with an non-existent game id" do
