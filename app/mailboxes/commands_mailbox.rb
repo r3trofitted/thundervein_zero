@@ -1,6 +1,22 @@
 require "action_mailbox_ext"
 using ActionMailboxExt
 
+##
+# Handles the command-related incoming emails
+#
+# At the moment, a "command" is basically the equivalent of a +create+ action on applicable resources, such as 
+# +Order+ or +Participation+. (Commands involving other actions, such as +destroy+, could possibly be introduced 
+# in the future.)
+#
+# This mailbox's is responsible for several things:
+#
+# - Identify the resource to be created (this is currently done by analysing the mail's subject).
+# - Build the new resource from the information available in the email. (This should eventually involve some kind of NLP.)
+# - Attempt to save the new resource.
+# - If the resource *cannot* be saved, send a notification (via a bounce email).
+#
+# Do note that if the resource *is* saved (in other words, if the command succeeds), the mailbox does nothing. 
+# Confirmations/positive feedback are under the responsibility of the resources themselves.
 class CommandsMailbox < ApplicationMailbox
   MATCHER = /^(?:arbiter|commands?)@(\d+)/i # e.g. arbiter@123456.thundervein-0.game for game 123456
   
@@ -17,10 +33,9 @@ class CommandsMailbox < ApplicationMailbox
                 end
   
     unless commanded.save
-      # TODO: call a more specializer mailer, if available? (e.g. OrdersMailer if commanded is a +Order+)
       bounce_with CommandsMailer.with(game:, player: commanded.player)
                                 .command_failed(commanded),
-                                deliver_now: true # skipping ActiveJob because player may not be serializable
+                                deliver_now: true # skipping ActiveJob because the +player+ param may not be serializable
     end
   end
   
