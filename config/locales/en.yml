@@ -1,7 +1,1 @@
 en:
-  games_mailer:
-    error_no_participation:
-      subject: "Unauthorized order received"
-  orders_mailer:
-    confirmation:
-      subject: "Order received (game #%{game_id}, turn %{turn_number})"
