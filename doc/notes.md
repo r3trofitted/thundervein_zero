@@ -30,6 +30,8 @@
 *   [ ] Implement a way to know when a player is eliminated from a game (e.g. strike their name on the monitoring page)
 *   Attacks will need a special "pending" status while the game waits for the defender to pick
     a guess. Which means, in turn (ah ah) that a turn resolution will not be atomic.
+*   How do we handle _starting_ a game? Once the max number of players is reached? (I don't like this a lot because 
+    then it's not a _max_ number.) Should games also have a _min_ number of players? Should the start be automatic or manual?
 
 ## Emails
 

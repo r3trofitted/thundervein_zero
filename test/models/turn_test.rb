@@ -136,7 +136,6 @@ class TurnTest < ActiveSupport::TestCase
     assert turn.finished?
   end
   
-  # TODO
   test "resolving switcheroo attacks" do
     turn = @new_game_turn_1
     
@@ -155,7 +154,6 @@ class TurnTest < ActiveSupport::TestCase
     assert turn.finished?
   end
   
-  # TODO
   test "resolving chained attacks" do
     turn = @new_game_turn_1
     
