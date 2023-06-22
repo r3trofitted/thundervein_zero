@@ -46,17 +46,32 @@ class CommandsMailbox < ApplicationMailbox
   private
   
   def new_participation
-    @game.participations.build(player_attributes: {
-                                                    email_address: mail.from_address.address, 
-                                                    name: mail.from_address.display_name
-                                                  })
+    game.participations.build(
+      player_attributes: {
+        email_address: mail.from_address.address,
+        name: mail.from_address.display_name
+      }
+    )
   end
   
+  # Creates an Order object from instructions in the email body.
+  #
+  # This is a *very* crude implementation – the instructions have to follow 
+  # a very precise format, like "move X units from A to B" or 
+  # "attack with X units from A to B".
+  #
+  # A smarter implementation, with possibly actual lexing, should eventually replace 
+  # this system. And be handed off to a dedicated object.
   def new_order
-    Order.from_text(mail.body.to_s) do |o|
-      o.player = Player.find_by email_address: mail.from
-      o.turn   = game.current_turn
-    end
+    text = mail.body.to_s
+    
+    type   = /(move|attack)(?=\s+)/i.match(text).to_s.capitalize
+    units  = /\d+(?=\s+units?)/i.match(text).to_s
+    # for origin and target, a lookbehind cannot be used because Ruby only allows fixed-length lookbehinds
+    origin = /(?:from\s+)(\w+)/i.match(text) { |m| m[1].downcase }
+    target = /(?:to\s+)(\w+)/i.match(text) { |m| m[1].downcase }
+    
+    game.current_turn.orders.build type:, units:, origin:, target:, player: Player.find_by(email_address: mail.from)
   end
   
   def new_status_report
