@@ -4,27 +4,34 @@ class CommandsMailer < ApplicationMailer
   default from: -> { @game.arbiter_email_address }
 
   def command_failed(commanded)
-    # p commanded.errors
-    Rails.logger.debug commanded.errors
-    
-    # case [commanded, commanded.errors[:base]]
-      # in 
-    
-    # == Participation
-    # game_already_full
-    # game_already_started
-    # game_already_full
-    # could_not_create_player_player_name_blank
-    # already_playing
-    
-    # == Order
-    # doesnt_participate_in_indicated_game
-    # game_not_started
-    # game_over
-    # turn_being_resolved
-    # order_already_given
-    # missing_attribute
-    
-    mail to: commanded.player.email_address # TODO: will there always be a player?
+    @failure_message = failure_message(commanded)
+    mail to: commanded.player.email_address
+  end
+  
+  private
+  
+  def failure_message(commanded)
+    # TODO Order :missing_attribute
+    # TODO Participation.player (e.g. player.name blank or player.email_address blank)
+    case [commanded, commanded.errors.where(:base).map(&:type).first]
+    in [Order, :player_not_participating]
+      "Unfortunately, it appears that you are not a participating in this game."
+    in [Order, :game_not_started]
+      "Unfortunately, the game has not started yet. Your order has been ignored; please send it again once the game has started."
+    in [Order, :game_over]
+      "Unfortunately, the game is over."
+    in [Order, :turn_resolution_in_progress]
+      "Unfortunately, the window for giving orders during the current turn is closed."
+    in [Order, :order_already_given]
+      "Unfortunately, it appears that you already gave an order this turn."
+    in [Participation, :game_already_started]
+      "Unfortunately, the game has already started, and I must refuse your request for participating."
+    in [Participation, :game_already_full]
+      "Unfortunately, the game is already full, and I must refuse your request for participating."
+    in [Participation, :player_already_participating]
+      "Unfortunately, it appears that you are already participating in this game."
+    else
+      "Unfortunately, I could not understand your message. You may want to rephrase it and send it again."
+    end
   end
 end
